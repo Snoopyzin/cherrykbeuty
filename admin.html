@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel | Cherry Kbeuty</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#7a1426">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600;1,700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500&display=swap&text=%EC%A1%B0%EC%84%A0%EB%AF%B8%EB%85%80" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <header class="topo">
+    <div class="topo__marca">
+      <img src="images/cereja-laco.webp" alt="" width="38" height="50">
+      <div>
+        <p class="topo__titulo">Painel da loja</p>
+        <p class="topo__sub">Cherry Kbeuty</p>
+      </div>
+    </div>
+    <div class="topo__acoes">
+      <a class="btn btn--sec btn--peq" href="index.html" target="_blank" rel="noopener">Ver o site</a>
+      <button class="btn btn--prim btn--peq" id="btn-publicar" type="button">Publicar<span class="selo-conta" id="topo-contagem" hidden>0</span></button>
+    </div>
+  </header>
+
+  <main class="miolo" id="miolo">
+    <noscript><p class="aviso aviso--erro">Ative o JavaScript do navegador para usar o painel.</p></noscript>
+
+    <div id="avisos"></div>
+
+    <div class="abas" role="tablist" aria-label="Seções do painel">
+      <button class="aba" type="button" role="tab" id="tab-produtos" aria-controls="aba-produtos" aria-selected="true" data-aba="produtos">Produtos</button>
+      <button class="aba" type="button" role="tab" id="tab-marcas" aria-controls="aba-marcas" aria-selected="false" data-aba="marcas" tabindex="-1">Marcas</button>
+      <button class="aba" type="button" role="tab" id="tab-config" aria-controls="aba-config" aria-selected="false" data-aba="config" tabindex="-1">Regras<span class="aba__extra"> e contato</span></button>
+    </div>
+
+    <!-- ========== PRODUTOS ========== -->
+    <section id="aba-produtos" role="tabpanel" aria-labelledby="tab-produtos">
+      <div class="ferramentas">
+        <label class="busca">
+          <span class="sr-only">Buscar produto</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+          <input id="f-busca" type="search" placeholder="Buscar produto ou marca…" autocomplete="off">
+        </label>
+        <label class="seletor">
+          <span class="sr-only">Filtrar por marca</span>
+          <select id="f-marca"></select>
+        </label>
+        <div class="chips" role="group" aria-label="Categoria">
+          <button class="chip" type="button" data-cat="todos" aria-pressed="true">Todos</button>
+          <button class="chip" type="button" data-cat="skincare" aria-pressed="false">Skincare</button>
+          <button class="chip" type="button" data-cat="haircare" aria-pressed="false">Haircare</button>
+        </div>
+        <button class="btn btn--prim" id="btn-novo-produto" type="button">+ Novo produto</button>
+      </div>
+      <p class="dica">Mude os preços direto na lista, é só digitar. Para trocar foto, nome ou descrição, toque em <strong>Editar tudo</strong>. Nada vai para o site até você tocar em <strong>Publicar</strong>.</p>
+      <p class="contagem" id="lista-contagem" aria-live="polite"></p>
+      <div class="lista" id="lista-produtos"><p class="carregando">Carregando o catálogo…</p></div>
+    </section>
+
+    <!-- ========== MARCAS ========== -->
+    <section id="aba-marcas" role="tabpanel" aria-labelledby="tab-marcas" hidden>
+      <div class="ferramentas ferramentas--marcas">
+        <p class="dica">As marcas aparecem na seção “Marcas” do site. Cadastre a marca aqui antes de criar produtos dela.</p>
+        <button class="btn btn--prim" id="btn-nova-marca" type="button">+ Nova marca</button>
+      </div>
+      <div class="lista lista--marcas" id="lista-marcas"></div>
+    </section>
+
+    <!-- ========== REGRAS E CONTATO ========== -->
+    <section id="aba-config" role="tabpanel" aria-labelledby="tab-config" hidden>
+      <div class="cartao-form">
+        <h2 class="titulo-secao">Regras do atacado</h2>
+        <div class="campo">
+          <label for="cfg-faixa2">Preço de atacado a partir de quantas peças?</label>
+          <div class="campo-sufixo"><input id="cfg-faixa2" type="number" inputmode="numeric" min="2" max="999" step="1"><span>peças</span></div>
+          <p class="campo__ajuda">Somando essa quantidade (mix livre), o pedido inteiro passa para o preço de atacado. Atualiza todos os textos do site.</p>
+        </div>
+        <div class="campo">
+          <label for="cfg-express">Atacado Express a partir de quanto?</label>
+          <div class="campo-reais"><i>R$</i><input id="cfg-express" type="text" inputmode="decimal" autocomplete="off"></div>
+          <p class="campo__ajuda">Valor do pedido a partir do qual vale a entrega em até 3 dias úteis. Atualiza todos os textos do site.</p>
+        </div>
+
+        <h2 class="titulo-secao">WhatsApp</h2>
+        <div class="campo">
+          <label for="cfg-whats">Número que recebe os pedidos</label>
+          <input id="cfg-whats" type="tel" inputmode="tel" autocomplete="off" placeholder="(62) 98266-7385">
+          <p class="campo__ajuda" id="cfg-whats-ajuda"></p>
+        </div>
+        <div class="campo">
+          <label for="cfg-msg">Mensagem do botão “Atacado Express”</label>
+          <textarea id="cfg-msg" rows="3"></textarea>
+          <p class="campo__ajuda">É o texto que já vem escrito quando o cliente toca no botão do início do site. Se você mudar o valor do Express acima, o valor também é trocado aqui.</p>
+        </div>
+      </div>
+
+      <details class="avancado">
+        <summary>Ferramentas avançadas</summary>
+        <div class="avancado__corpo">
+          <p>Para quem cuida do site: baixe os arquivos que o painel gera (útil se a conexão com o GitHub der problema) ou volte ao que está no ar.</p>
+          <div class="botoes">
+            <button class="btn btn--sec btn--peq" id="btn-baixar" type="button">Baixar arquivos do catálogo</button>
+            <button class="btn btn--sec btn--peq" id="btn-recarregar" type="button">Recarregar do site (descarta alterações)</button>
+            <button class="btn btn--sec btn--peq" id="btn-conexao" type="button">Conexão com o GitHub</button>
+          </div>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <!-- barra fixa quando há alterações -->
+  <div class="barra-publicar" id="barra-publicar" hidden>
+    <p id="barra-texto"></p>
+    <button class="btn btn--sec btn--peq" id="btn-descartar" type="button">Descartar</button>
+    <button class="btn btn--prim" id="btn-publicar-2" type="button">Publicar no site</button>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- ========== EDITAR / CRIAR PRODUTO ========== -->
+  <dialog class="dlg" id="dlg-produto" aria-labelledby="dp-titulo">
+    <form id="form-produto" novalidate>
+      <header class="dlg__topo">
+        <h2 id="dp-titulo">Editar produto</h2>
+        <button class="fechar" type="button" data-fecha aria-label="Fechar">×</button>
+      </header>
+      <div class="dlg__corpo">
+        <div class="grade-foto">
+          <div class="foto-prev" id="dp-foto-prev" aria-hidden="true"></div>
+          <div class="foto-acoes">
+            <p class="rotulo">Foto do produto</p>
+            <div class="botoes">
+              <label class="btn btn--sec btn--peq btn-arquivo">Escolher foto<input id="dp-foto" type="file" accept="image/*"></label>
+              <button class="btn btn--sec btn--peq" id="dp-foto-remover" type="button">Remover foto</button>
+            </div>
+            <p class="campo__ajuda" id="dp-foto-info">A foto é ajustada sozinha (quadrada e leve). Sem foto, o site mostra uma ilustração da embalagem.</p>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="dp-nome">Nome do produto</label>
+          <input id="dp-nome" name="nome" type="text" required autocomplete="off" placeholder="Ex.: Zero Pore Pad 2.0 – 70 discos (155g)">
+        </div>
+        <div class="campo">
+          <label for="dp-tipo">O que é <small>(texto curto embaixo do nome)</small></label>
+          <input id="dp-tipo" name="tipo" type="text" autocomplete="off" placeholder="Ex.: Pads esfoliantes">
+        </div>
+        <div class="par">
+          <div class="campo">
+            <label for="dp-marca">Marca</label>
+            <select id="dp-marca" name="marca" required></select>
+          </div>
+          <div class="campo">
+            <label for="dp-categoria">Categoria</label>
+            <select id="dp-categoria" name="categoria">
+              <option value="skincare">Skincare</option>
+              <option value="haircare">Haircare</option>
+            </select>
+          </div>
+        </div>
+
+        <h3 class="subtitulo">Preços <small>(por unidade)</small></h3>
+        <div class="trio">
+          <div class="campo">
+            <label for="dp-preco">Preço normal</label>
+            <div class="campo-reais"><i>R$</i><input id="dp-preco" name="preco" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+          </div>
+          <div class="campo">
+            <label for="dp-preco30" id="dp-preco30-rotulo">Atacado</label>
+            <div class="campo-reais"><i>R$</i><input id="dp-preco30" name="preco30" type="text" inputmode="decimal" autocomplete="off" placeholder="igual"></div>
+          </div>
+          <div class="campo">
+            <label for="dp-antigo">Preço antigo</label>
+            <div class="campo-reais"><i>R$</i><input id="dp-antigo" name="precoAntigo" type="text" inputmode="decimal" autocomplete="off" placeholder="sem"></div>
+          </div>
+        </div>
+        <p class="campo__ajuda">Deixe o <strong>preço normal</strong> vazio para mostrar “Preço em breve”. Deixe o <strong>atacado</strong> vazio para valer o mesmo preço em qualquer quantidade. Preencha o <strong>preço antigo</strong> (maior que o atual) para o produto entrar em <strong>Promoções</strong> com o preço riscado.</p>
+
+        <div class="campo">
+          <label for="dp-selo">Etiqueta na foto <small>(opcional)</small></label>
+          <input id="dp-selo" name="selo" type="text" autocomplete="off" maxlength="20" placeholder="Ex.: Lançamento">
+          <p class="campo__ajuda">Em produtos em promoção, o site mostra a porcentagem de desconto no lugar da etiqueta.</p>
+        </div>
+
+        <details class="recolhe" id="dp-desc-det">
+          <summary>Descrição completa <small>(aparece em “Ver detalhes”)</small></summary>
+          <div class="recolhe__corpo">
+            <div class="campo">
+              <label for="dp-resumo">Resumo</label>
+              <textarea id="dp-resumo" rows="3"></textarea>
+            </div>
+            <div class="campo">
+              <label for="dp-serve">Para que serve?</label>
+              <textarea id="dp-serve" rows="3"></textarea>
+            </div>
+            <div class="campo">
+              <label for="dp-beneficios">Principais benefícios <small>(um por linha)</small></label>
+              <textarea id="dp-beneficios" rows="5"></textarea>
+            </div>
+            <div class="campo">
+              <label for="dp-ativos">Principais ativos <small>(um por linha, assim: Nome: explicação)</small></label>
+              <textarea id="dp-ativos" rows="4" placeholder="Niacinamida: ajuda no controle da oleosidade"></textarea>
+            </div>
+            <div class="campo">
+              <label for="dp-rotina">Por que incluir na rotina? <small>(separe os parágrafos com uma linha em branco)</small></label>
+              <textarea id="dp-rotina" rows="5"></textarea>
+            </div>
+            <div class="campo">
+              <label for="dp-importante">Aviso importante <small>(opcional)</small></label>
+              <textarea id="dp-importante" rows="2"></textarea>
+            </div>
+            <p class="campo__ajuda" id="dp-extra-info" hidden></p>
+          </div>
+        </details>
+
+        <details class="recolhe">
+          <summary>Ilustração quando não há foto <small>(opcional)</small></summary>
+          <div class="recolhe__corpo">
+            <div class="campo">
+              <label for="dp-forma">Formato da embalagem</label>
+              <select id="dp-forma"></select>
+            </div>
+            <div class="trio">
+              <div class="campo"><label for="dp-cor-corpo">Cor do corpo</label><input id="dp-cor-corpo" type="color"></div>
+              <div class="campo"><label for="dp-cor-tampa">Cor da tampa</label><input id="dp-cor-tampa" type="color"></div>
+              <div class="campo"><label for="dp-cor-texto">Cor do texto</label><input id="dp-cor-texto" type="color"></div>
+            </div>
+          </div>
+        </details>
+
+        <p class="aviso aviso--erro" id="dp-erro" role="alert" hidden></p>
+      </div>
+      <footer class="dlg__rodape">
+        <button class="btn btn--perigo btn--peq" id="dp-excluir" type="button">Excluir produto</button>
+        <span class="espaco"></span>
+        <button class="btn btn--sec" type="button" data-fecha>Cancelar</button>
+        <button class="btn btn--prim" type="submit">Salvar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ========== MARCA ========== -->
+  <dialog class="dlg dlg--peq" id="dlg-marca" aria-labelledby="dm-titulo">
+    <form id="form-marca" novalidate>
+      <header class="dlg__topo">
+        <h2 id="dm-titulo">Nova marca</h2>
+        <button class="fechar" type="button" data-fecha aria-label="Fechar">×</button>
+      </header>
+      <div class="dlg__corpo">
+        <div class="logo-previa"><span id="dm-previa" class="logo logo--sans">Marca</span></div>
+        <div class="campo">
+          <label for="dm-nome">Nome da marca</label>
+          <input id="dm-nome" type="text" required autocomplete="off" placeholder="Ex.: COSRX">
+        </div>
+        <div class="campo">
+          <label for="dm-logo">Como o nome aparece no “logo” <small>(deixe vazio para usar o nome)</small></label>
+          <input id="dm-logo" type="text" autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="dm-estilo">Estilo da letra</label>
+          <select id="dm-estilo"></select>
+        </div>
+        <div class="par">
+          <div class="campo"><label for="dm-cor">Cor da letra</label><input id="dm-cor" type="color" value="#111111"></div>
+          <div class="campo">
+            <label for="dm-fundo-usar" class="check"><input id="dm-fundo-usar" type="checkbox"> Fundo colorido</label>
+            <input id="dm-fundo" type="color" value="#8b52c4" disabled>
+          </div>
+        </div>
+        <div class="campo">
+          <label for="dm-sub">Subtítulo <small>(opcional, aparece embaixo do nome)</small></label>
+          <input id="dm-sub" type="text" autocomplete="off" maxlength="24">
+        </div>
+        <p class="aviso aviso--erro" id="dm-erro" role="alert" hidden></p>
+      </div>
+      <footer class="dlg__rodape">
+        <span class="espaco"></span>
+        <button class="btn btn--sec" type="button" data-fecha>Cancelar</button>
+        <button class="btn btn--prim" type="submit">Salvar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ========== CONECTAR AO GITHUB ========== -->
+  <dialog class="dlg dlg--peq" id="dlg-conectar" aria-labelledby="dc-titulo">
+    <form id="form-conectar" novalidate>
+      <header class="dlg__topo">
+        <h2 id="dc-titulo">Conectar ao site</h2>
+        <button class="fechar" type="button" data-fecha aria-label="Fechar">×</button>
+      </header>
+      <div class="dlg__corpo" id="dc-corpo">
+        <p class="aviso aviso--info" id="dc-estado" hidden></p>
+        <p>Para publicar, o painel precisa de uma <strong>chave de acesso</strong> do GitHub. Ela só precisa ser criada <strong>uma vez</strong> e fica guardada neste aparelho.</p>
+        <details class="recolhe" open>
+          <summary>Como criar a chave (passo a passo)</summary>
+          <ol class="passos-lista">
+            <li>Entre no GitHub com a conta dona do site e abra <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
+            <li>Em <strong>Token name</strong>, escreva <em>Painel Cherry</em>. Em <strong>Expiration</strong>, escolha o maior prazo (1 ano).</li>
+            <li>Em <strong>Repository access</strong>, marque <strong>Only select repositories</strong> e escolha <strong>cherrykbeuty</strong>.</li>
+            <li>Em <strong>Permissions → Repository permissions</strong>, procure <strong>Contents</strong> e mude para <strong>Read and write</strong>.</li>
+            <li>Clique em <strong>Generate token</strong>, copie o código que começa com <code>github_pat_</code> e cole abaixo.</li>
+          </ol>
+        </details>
+        <div class="campo">
+          <label for="dc-token">Chave de acesso</label>
+          <input id="dc-token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
+        </div>
+        <div class="campo">
+          <label for="dc-repo">Repositório do site</label>
+          <input id="dc-repo" type="text" autocomplete="off" spellcheck="false" placeholder="dono/nome-do-repositorio">
+        </div>
+        <label class="check"><input id="dc-lembrar" type="checkbox" checked> Lembrar neste aparelho</label>
+        <p class="aviso aviso--erro" id="dc-erro" role="alert" hidden></p>
+      </div>
+      <footer class="dlg__rodape">
+        <button class="btn btn--perigo btn--peq" id="dc-desconectar" type="button" hidden>Desconectar</button>
+        <span class="espaco"></span>
+        <button class="btn btn--sec" type="button" data-fecha>Cancelar</button>
+        <button class="btn btn--prim" type="submit" id="dc-conectar">Conectar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ========== PUBLICAR ========== -->
+  <dialog class="dlg" id="dlg-publicar" aria-labelledby="pb-titulo">
+    <div id="pb-conteudo"></div>
+  </dialog>
+
+  <script src="js/admin-core.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

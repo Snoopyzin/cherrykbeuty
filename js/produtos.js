@@ -1,5 +1,5 @@
 /* =========================================================
-   Cherry Kbeuty — CATÁLOGO (Atacado Express)
+   Cherry Kbeuty — CATÁLOGO
    Edite aqui preços, nomes, marcas e fotos. O site se atualiza sozinho.
    As descrições completas ficam em js/descricoes.js (mesmo "id").
 
@@ -21,10 +21,11 @@ window.CHERRY_CONFIG = {
   valorMinimo: 0,    // opcional: valor mínimo em reais além das peças (0 = desligado)
   // Número que recebe os pedidos e as consultas do catálogo, só dígitos com DDI + DDD (ex.: '5562999998888').
   whatsapp: '5562982667385',
-  // Atacado Express: compra mínima em reais para negociar direto pelo WhatsApp
-  expressMinimo: 2500,
+  // Atacado Express: pedido a partir deste valor em reais (não depende do número de peças).
+  // Só o Atacado Express tem entrega em até 3 dias úteis.
+  expressMinimo: 2300,
   // Mensagem que já vem escrita quando o cliente toca no botão "Atacado Express" do início da página
-  mensagemConsulta: 'Olá! Gostaria de saber como funciona o Atacado Express da Cherry Kbeuty (compras a partir de R$ 2.500).',
+  mensagemConsulta: 'Olá! Gostaria de saber como funciona o Atacado Express da Cherry Kbeuty (compras a partir de R$ 2.300).',
 };
 
 window.CHERRY_MARCAS = [
@@ -39,6 +40,10 @@ window.CHERRY_MARCAS = [
   { id: 'k-secret',         nome: 'K-Secret',         logo: 'K-SECRET',  estilo: 'espacado',  cor: '#1d1d1d' },
   { id: 'biore',            nome: 'Bioré',            logo: 'Bioré',     estilo: 'serif',     cor: '#1f3f9a' },
   { id: 'rhode',            nome: 'rhode',            logo: 'rhode',     estilo: 'sans',      cor: '#7a1f3d' },
+  { id: 'cosrx', nome: 'COSRX', logo: 'COSRX', estilo: 'espacado', cor: '#1d1d1d' },
+  { id: 'etude', nome: 'Etude', logo: 'ETUDE', estilo: 'espacado', cor: '#e0457b' },
+  { id: 'eucerin', nome: 'Eucerin', logo: 'Eucerin', estilo: 'sans', cor: '#0b3a7a' },
+  { id: 'axis-y', nome: 'Axis-Y', logo: 'AXIS-Y', estilo: 'espacado', cor: '#1f7a3c' },
 ];
 
 const FOTO = (id) => `images/produtos/${id}.webp`;
@@ -320,4 +325,44 @@ window.CHERRY_PRODUTOS = [
     nome: 'Premium Touch Shampoo + Condicionador', tipo: 'Kit capilar',
     preco: 189, preco30: 169, imagem: FOTO('fino-shampoo-condicionador'),
     arte: { forma: 'pump', corpo: '#f4f4f4', tampa: '#ffffff', texto: '#b3121f' } },
+
+  { id: 'boj-green-plum-cleanser', marca: 'beauty-of-joseon', categoria: 'skincare',
+    nome: 'Green Plum Refreshing Cleanser', tipo: 'Limpador facial',
+    preco: null, imagem: FOTO('boj-green-plum-cleanser'),
+    arte: { forma: 'pump', corpo: '#bfe3d4', tampa: '#f4f4f2', texto: '#2f5d4a' } },
+
+  { id: 'cosrx-oil-free-lotion', marca: 'cosrx', categoria: 'skincare',
+    nome: 'Oil-Free Ultra-Moisturizing Lotion – 100ml', tipo: 'Loção hidratante',
+    preco: 219.24, imagem: FOTO('cosrx-oil-free-lotion'),
+    arte: { forma: 'pump', corpo: '#f4f6f8', tampa: '#1f1f1f', texto: '#2d5a8a' } },
+
+  { id: 'etude-soon-jung-whip-cleanser', marca: 'etude', categoria: 'skincare',
+    nome: 'Soon Jung pH 6.5 Whip Cleanser – 150ml', tipo: 'Espuma de limpeza',
+    preco: null, imagem: FOTO('etude-soon-jung-whip-cleanser'),
+    arte: { forma: 'pump', corpo: '#ffffff', tampa: '#f2f2f2', texto: '#2f6fe0' } },
+
+  { id: 'eucerin-dermopure-triple-serum', marca: 'eucerin', categoria: 'skincare',
+    nome: 'Dermopure Facial Efeito Triplo Sérum – 40ml', tipo: 'Sérum facial',
+    preco: 160, imagem: FOTO('eucerin-dermopure-triple-serum'),
+    arte: { forma: 'pump', corpo: '#f6fbfa', tampa: '#e9f2f0', texto: '#0b7a6e' } },
+
+  { id: 'cosrx-snail-92-cream', marca: 'cosrx', categoria: 'skincare',
+    nome: 'Advanced Snail 92 All in One Cream – 100g', tipo: 'Creme hidratante',
+    preco: null, imagem: FOTO('cosrx-snail-92-cream'),
+    arte: { forma: 'pote', corpo: '#f1ede0', tampa: '#1f1f1f', texto: '#6b5a2a' } },
+
+  { id: 'eucerin-aquaphor-pomada-kit', marca: 'eucerin', categoria: 'skincare',
+    nome: 'Aquaphor Pomada Reparadora – kit com 2 bisnagas de 9g', tipo: 'Pomada reparadora',
+    preco: 65, imagem: FOTO('eucerin-aquaphor-pomada-kit'),
+    arte: { forma: 'bisnaga', corpo: '#fbfbfb', tampa: '#1f3b78', texto: '#c8102e' } },
+
+  { id: 'boj-relief-sun-aqua-fresh', marca: 'beauty-of-joseon', categoria: 'skincare',
+    nome: 'Relief Sun Aqua-Fresh: Rice + B5 SPF50+ PA++++', tipo: 'Protetor solar',
+    preco: null, imagem: FOTO('boj-relief-sun-aqua-fresh'),
+    arte: { forma: 'bisnaga', corpo: '#f6f1e7', tampa: '#9db7e0', texto: '#5a4a32' } },
+
+  { id: 'axis-y-dark-spot-serum', marca: 'axis-y', categoria: 'skincare',
+    nome: 'Dark Spot Correcting Glow Serum – 50ml', tipo: 'Sérum para manchas',
+    preco: null, imagem: FOTO('axis-y-dark-spot-serum'),
+    arte: { forma: 'bisnaga', corpo: '#f4f7f2', tampa: '#1f7a3c', texto: '#1f7a3c' } },
 ];

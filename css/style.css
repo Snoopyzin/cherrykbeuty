@@ -620,7 +620,7 @@ section[id] { scroll-margin-top: calc(var(--topo-h) + 8px); }
 }
 .marcas::-webkit-scrollbar { display: none; }
 @media (min-width: 1100px) {
-  .marcas { justify-content: space-between; overflow: visible; }
+  .marcas { justify-content: center; flex-wrap: wrap; row-gap: 22px; overflow: visible; }
 }
 
 .marca-item {
@@ -837,7 +837,10 @@ a.produto__midia { cursor: pointer; }
   color: var(--branco);
 }
 .faixas { display: grid; gap: 14px; }
-@media (min-width: 700px) { .faixas { grid-template-columns: 1fr 1fr; gap: 20px; } }
+@media (min-width: 700px) {
+  .faixas { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .faixa-preco--express { grid-column: 1 / -1; }
+}
 .faixa-preco {
   padding: 22px;
   border-radius: 20px;

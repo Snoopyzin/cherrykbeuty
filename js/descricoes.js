@@ -637,4 +637,36 @@ window.CHERRY_DESCRICOES = {
       'O diferencial do Seoul 1988 Sun é oferecer proteção solar alta junto com cuidado de barreira e hidratação, sendo ideal para quem quer proteger a pele diariamente sem abrir mão do tratamento.',
     ],
   },
+
+  'boj-green-plum-cleanser': {
+    resumo: 'Limpador facial refrescante com ameixa verde (Green Plum), da Beauty of Joseon.',
+  },
+
+  'cosrx-oil-free-lotion': {
+    resumo: 'Hidratação leve para ajudar a manter o conforto da pele sem uma sensação muito pesada. Com 70,8% de seiva de bétula.',
+  },
+
+  'etude-soon-jung-whip-cleanser': {
+    resumo: 'Espuma de limpeza com pH 6,5, suave e de baixa irritação, da linha Soon Jung.',
+  },
+
+  'eucerin-dermopure-triple-serum': {
+    resumo: 'Sérum facial de efeito triplo com 2% de ácido salicílico e Thiamidol.',
+  },
+
+  'cosrx-snail-92-cream': {
+    resumo: 'Creme com 92% de filtrado de secreção de caracol (mucina). Ajuda a dar o brilho natural de uma pele saudável.',
+  },
+
+  'eucerin-aquaphor-pomada-kit': {
+    resumo: 'Pomada reparadora para pele seca e extremamente seca. Kit com 2 bisnagas de 9 g cada.',
+  },
+
+  'boj-relief-sun-aqua-fresh': {
+    resumo: 'Protetor solar FPS50+ PA++++ com arroz e B5, da linha Relief Sun Aqua-Fresh.',
+  },
+
+  'axis-y-dark-spot-serum': {
+    resumo: 'Sérum com niacinamida 5% e esqualano vegetal. Ajuda a corrigir manchas e iluminar a pele, mantendo a hidratação.',
+  },
 };

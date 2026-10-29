@@ -29,6 +29,7 @@
     el.textContent = valorMinimo > 0 ? `${pecas(pecasMinimas)} e ${moeda(valorMinimo)}` : pecas(pecasMinimas);
   });
   $$('[data-faixa2]').forEach((el) => { el.textContent = pecas(pecasFaixa2); });
+  $$('[data-faixa1-max]').forEach((el) => { el.textContent = pecasFaixa2 - 1; });
   $$('[data-express-minimo]').forEach((el) => { el.textContent = moeda(expressMinimo); });
 
   // botão "Atacado Express": abre o WhatsApp com a mensagem pronta
@@ -327,9 +328,10 @@
       `Peças: *${un}* (${faixa})`,
       eco > 0 && `Economia do atacado: ${moeda(eco)}`,
       `*Total: ${moeda(t)}*`,
-      expressMinimo > 0 && t >= expressMinimo && `Pedido acima de ${moeda(expressMinimo)}: Atacado Express`,
+      expressMinimo > 0 && t >= expressMinimo && `Pedido a partir de ${moeda(expressMinimo)}: Atacado Express (entrega em até 3 dias úteis)`,
       '',
       'Pagamento: Pix ou cartão em até 3x (taxas do parcelamento por minha conta).',
+      'Taxa de entrega: a combinar.',
       'Aguardo a confirmação da disponibilidade para combinarmos o pagamento.',
     ].filter((l) => l !== false).join('\n');
     if (!whatsapp) {
