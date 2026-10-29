@@ -70,7 +70,7 @@
         </div>
         <button class="btn btn--prim" id="btn-novo-produto" type="button">+ Novo produto</button>
       </div>
-      <p class="dica">Mude os preços direto na lista, é só digitar. Para trocar foto, nome ou descrição, toque em <strong>Editar tudo</strong>. Para escolher o que fica em <strong>promoção</strong> (e o que aparece no topo do site), use a aba <strong>Vitrine</strong>. Nada vai para o site até você tocar em <strong>Publicar</strong>.</p>
+      <p class="dica">Mude os preços direto na lista, é só digitar. Para trocar foto, nome ou descrição, toque em <strong>Editar tudo</strong>. Para colocar um produto em <strong>promoção</strong>, toque em <strong>+ Promoção</strong> na linha dele (ou use a aba <strong>Vitrine</strong>): ele vai para a seção “Promoções!” no topo do site. Nada vai para o site até você tocar em <strong>Publicar</strong>.</p>
       <p class="contagem" id="lista-contagem" aria-live="polite"></p>
       <div class="lista" id="lista-produtos"><p class="carregando">Carregando o catálogo…</p></div>
     </section>
@@ -232,21 +232,25 @@
         </div>
 
         <h3 class="subtitulo">Preços <small>(por unidade)</small></h3>
-        <div class="trio">
+        <div class="par">
           <div class="campo">
-            <label for="dp-preco">Preço normal</label>
+            <label for="dp-preco" id="dp-preco-rotulo">Preço normal</label>
             <div class="campo-reais"><i>R$</i><input id="dp-preco" name="preco" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div>
           </div>
           <div class="campo">
             <label for="dp-preco30" id="dp-preco30-rotulo">Atacado</label>
             <div class="campo-reais"><i>R$</i><input id="dp-preco30" name="preco30" type="text" inputmode="decimal" autocomplete="off" placeholder="igual"></div>
           </div>
-          <div class="campo">
-            <label for="dp-antigo">Preço antigo</label>
-            <div class="campo-reais"><i>R$</i><input id="dp-antigo" name="precoAntigo" type="text" inputmode="decimal" autocomplete="off" placeholder="sem"></div>
+        </div>
+        <div class="promo-caixa">
+          <label class="check" for="dp-promo"><input id="dp-promo" type="checkbox"> Colocar este produto em promoção</label>
+          <div class="campo" id="dp-promo-campos" hidden>
+            <label for="dp-antigo">Preço antigo <small>(o de antes; aparece riscado)</small></label>
+            <div class="campo-reais"><i>R$</i><input id="dp-antigo" name="precoAntigo" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+            <p class="campo__ajuda">Digite o <strong>preço promocional</strong> no campo de cima (ou um desconto, como <strong>10%</strong>). Para tirar da promoção, desmarque a caixa: o produto volta ao preço antigo.</p>
           </div>
         </div>
-        <p class="campo__ajuda">Deixe o <strong>preço normal</strong> vazio para mostrar “Preço em breve”. Deixe o <strong>atacado</strong> vazio para valer o mesmo preço em qualquer quantidade. Preencha o <strong>preço antigo</strong> (maior que o atual) para o produto entrar em <strong>Promoções</strong> com o preço riscado.</p>
+        <p class="campo__ajuda">Deixe o <strong>preço</strong> vazio para mostrar “Preço em breve”. Deixe o <strong>atacado</strong> vazio para valer o mesmo preço em qualquer quantidade.</p>
 
         <div class="campo">
           <label for="dp-selo">Etiqueta na foto <small>(opcional)</small></label>

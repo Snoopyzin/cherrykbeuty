@@ -230,12 +230,41 @@
     return Core.iguais(o, p) && Core.iguais(S.original.descricoes[p.id], S.atual.descricoes[p.id]) ? '' : 'mudou';
   }
 
+  /* ----- promoção: ligar e desligar ----- */
+
+  // lê "149,90" (preço) ou "10%" (desconto) e devolve { novo } ou { erro }
+  function calculaPromo(p, bruto) {
+    const txt = String(bruto || '').trim();
+    const porcento = txt.endsWith('%');
+    const lido = Core.lerReais(porcento ? txt.slice(0, -1) : txt);
+    if (!temPreco(p)) return { erro: 'Esse produto ainda não tem preço. Defina o preço normal primeiro.' };
+    if (lido === null || Number.isNaN(lido) || lido <= 0) return { erro: 'Digite o preço promocional (ex.: 149,90) ou o desconto (ex.: 10%).' };
+    if (porcento && lido >= 100) return { erro: 'O desconto precisa ser menor que 100%.' };
+    const novo = porcento ? Math.round(p.preco * (100 - lido)) / 100 : lido;
+    if (novo >= p.preco) return { erro: `O preço promocional precisa ser menor que o preço de hoje (${brl(p.preco)}).` };
+    return { novo };
+  }
+  const aplicaPromo = (p, novo) => { p.precoAntigo = p.preco; p.preco = novo; };
+  function encerraPromo(p) {
+    const antes = { preco: p.preco, precoAntigo: p.precoAntigo };
+    if (p.precoAntigo > p.preco) p.preco = p.precoAntigo;
+    delete p.precoAntigo;
+    return antes;
+  }
+  const avisoAtacado = (p) => (typeof p.preco30 === 'number' && p.preco30 > p.preco
+    ? ` Atenção: o atacado (${brl(p.preco30)}) ficou maior que o preço promocional; ajuste o atacado.` : '');
+
+  function botaoPromo(p) {
+    const ativa = ehPromo(p);
+    const bloqueado = !ativa && !temPreco(p);
+    return `<button class="promo-toggle" type="button" data-acao="promo" aria-pressed="${ativa}"${bloqueado ? ' disabled title="Defina o preço normal primeiro"' : ''}>Promoção</button>`;
+  }
+
   function etiquetas(p) {
     const e = estadoLinha(p);
     return [
       e === 'novo' && '<span class="etq etq--novo">Novo</span>',
       e === 'mudou' && '<span class="etq etq--mudou">Alterado</span>',
-      ehPromo(p) && '<span class="etq etq--promo">Promoção</span>',
       !temPreco(p) && '<span class="etq etq--alerta">Sem preço</span>',
       !p.imagem && '<span class="etq">Sem foto</span>',
     ].filter(Boolean).join('');
@@ -267,6 +296,13 @@
         <p class="item__marca">${esc(m ? m.nome : p.marca)}</p>
         <h3 class="item__nome">${esc(p.nome)}</h3>
         <div class="etiquetas">${etiquetas(p)}</div>
+        ${botaoPromo(p)}
+        <div class="promo-form" hidden>
+          <div class="campo-reais"><i>R$</i><input type="text" inputmode="decimal" autocomplete="off" data-promo-input placeholder="preço ou 10%" aria-label="Preço promocional ou desconto em porcentagem"></div>
+          <button class="btn btn--prim btn--peq" type="button" data-acao="promo-aplicar">Aplicar</button>
+          <button class="link" type="button" data-acao="promo-cancelar">Cancelar</button>
+          <p class="promo-erro" role="alert"></p>
+        </div>
       </div>
       <div class="item__precos">
         ${campoPreco(p, 'preco', 'Normal', 'em breve')}
@@ -325,6 +361,18 @@
     $('.etiquetas', el).innerHTML = etiquetas(p);
     $('.item__aviso', el).textContent = avisoLinha(p);
     $('[data-acao="desfazer"]', el).hidden = !e;
+    const bt = $('.promo-toggle', el);
+    if (bt) bt.outerHTML = botaoPromo(p);
+  }
+
+  // refaz uma linha inteira (preços e botão) e devolve o foco ao botão de promoção
+  function redesenhaLinha(id) {
+    const el = $(`.item[data-id="${CSS.escape(id)}"]`);
+    const p = produto(id);
+    if (!el || !p) return;
+    el.outerHTML = cartao(p);
+    const novo = $(`.item[data-id="${CSS.escape(id)}"] .promo-toggle`);
+    if (novo) novo.focus({ preventScroll: true });
   }
 
   const lista = $('#lista-produtos');
@@ -355,6 +403,10 @@
 
   lista.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && e.target.dataset.campo) e.target.blur();
+    if (e.key === 'Enter' && 'promoInput' in e.target.dataset) {
+      e.preventDefault();
+      $('[data-acao="promo-aplicar"]', e.target.closest('.promo-form')).click();
+    }
   });
 
   lista.addEventListener('click', (e) => {
@@ -363,6 +415,36 @@
     const id = b.closest('.item').dataset.id;
     if (b.dataset.acao === 'editar') abreProduto(id);
     if (b.dataset.acao === 'desfazer') desfazProduto(id);
+    const p = produto(id);
+    if (b.dataset.acao === 'promo') {
+      if (ehPromo(p)) {
+        const antes = encerraPromo(p);
+        mudou();
+        if (S.filtro.mostrar === 'promo') desenhaLista(); else redesenhaLinha(id);
+        mostraToast(`Promoção de “${p.nome}” encerrada. O preço voltou para ${brl(p.preco)}.`, {
+          texto: 'Desfazer',
+          fn: () => { p.preco = antes.preco; p.precoAntigo = antes.precoAntigo; mudou(); desenhaLista(); },
+        });
+      } else {
+        const f = $('.promo-form', b.closest('.item'));
+        f.hidden = !f.hidden;
+        if (!f.hidden) $('[data-promo-input]', f).focus();
+      }
+    }
+    if (b.dataset.acao === 'promo-cancelar') {
+      const f = b.closest('.promo-form');
+      f.hidden = true;
+      $('.promo-erro', f).textContent = '';
+    }
+    if (b.dataset.acao === 'promo-aplicar') {
+      const f = b.closest('.promo-form');
+      const r = calculaPromo(p, $('[data-promo-input]', f).value);
+      if (r.erro) { $('.promo-erro', f).textContent = r.erro; return; }
+      aplicaPromo(p, r.novo);
+      mudou();
+      redesenhaLinha(id);
+      mostraToast(`“${p.nome}” entrou em promoção (${pctTexto(p)}).${avisoAtacado(p)}`);
+    }
   });
 
   // foto que não carregou: mostra o aviso em vez do ícone quebrado
@@ -473,6 +555,7 @@
   const dp = {
     dlg: $('#dlg-produto'), form: $('#form-produto'),
     nome: $('#dp-nome'), tipo: $('#dp-tipo'), marca: $('#dp-marca'), categoria: $('#dp-categoria'), selo: $('#dp-selo'),
+    promo: $('#dp-promo'), antigoCampos: $('#dp-promo-campos'), precoRotulo: $('#dp-preco-rotulo'),
     preco: $('#dp-preco'), preco30: $('#dp-preco30'), antigo: $('#dp-antigo'),
     resumo: $('#dp-resumo'), serve: $('#dp-serve'), beneficios: $('#dp-beneficios'), ativos: $('#dp-ativos'), rotina: $('#dp-rotina'), importante: $('#dp-importante'),
     forma: $('#dp-forma'), corpo: $('#dp-cor-corpo'), tampa: $('#dp-cor-tampa'), texto: $('#dp-cor-texto'),
@@ -481,6 +564,40 @@
   dp.forma.innerHTML = FORMAS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('');
   let ed = null;
 
+  const NOVA_MARCA = '__nova__';
+  function preencheMarcasProduto(selecionada) {
+    dp.marca.innerHTML = S.atual.marcas.map((m) => `<option value="${esc(m.id)}">${esc(m.nome)}</option>`).join('')
+      + `<option value="${NOVA_MARCA}">+ Criar nova marca…</option>`;
+    dp.marca.value = selecionada;
+    dp.marca.dataset.anterior = selecionada;
+  }
+  dp.marca.addEventListener('change', () => {
+    if (dp.marca.value !== NOVA_MARCA) { dp.marca.dataset.anterior = dp.marca.value; return; }
+    dp.marca.value = dp.marca.dataset.anterior;   // se ela desistir, a marca anterior continua escolhida
+    abreMarca(null, { aoCriar: (id) => { preencheMarcasProduto(id); dp.categoria.focus(); } });
+  });
+
+  function atualizaCamposPromo() {
+    const ligada = dp.promo.checked;
+    dp.antigoCampos.hidden = !ligada;
+    dp.precoRotulo.textContent = ligada ? 'Preço promocional (hoje)' : 'Preço normal';
+    dp.preco.placeholder = ligada ? 'preço ou 10%' : '0';
+  }
+  // ligar: o preço de hoje vira o "antigo" e ela digita o novo; desligar: volta ao preço antigo
+  dp.promo.addEventListener('change', () => {
+    if (dp.promo.checked) {
+      const hoje = Core.lerReais(dp.preco.value);
+      if (typeof hoje === 'number' && !Number.isNaN(hoje) && hoje > 0) { dp.antigo.value = Core.formatarReais(hoje); dp.preco.value = ''; }
+      atualizaCamposPromo();
+      dp.preco.focus();
+    } else {
+      const antigo = Core.lerReais(dp.antigo.value);
+      if (typeof antigo === 'number' && !Number.isNaN(antigo) && antigo > 0) dp.preco.value = Core.formatarReais(antigo);
+      dp.antigo.value = '';
+      atualizaCamposPromo();
+    }
+  });
+
   function previaFoto() {
     const src = ed.foto ? ed.foto.dataUrl : (!ed.removeFoto && ed.p.imagem ? srcFoto(ed.p.imagem) : '');
     dp.prev.innerHTML = src ? `<img src="${esc(src)}" alt="">` : '<span>sem foto</span>';
@@ -488,7 +605,7 @@
   }
 
   function abreProduto(id) {
-    if (!S.atual.marcas.length) { mostraToast('Cadastre uma marca primeiro (aba Marcas).'); return; }
+    if (!S.atual.marcas.length) { abreMarca(null, { aoCriar: () => abreProduto(id) }); return; }
     const existente = id ? produto(id) : null;
     const p = existente ? Core.clonar(existente) : {
       id: '', marca: S.filtro.marca || S.atual.marcas[0].id, categoria: S.filtro.cat === 'haircare' ? 'haircare' : 'skincare',
@@ -499,13 +616,14 @@
     $('#dp-titulo').textContent = existente ? 'Editar produto' : 'Novo produto';
     dp.nome.value = p.nome;
     dp.tipo.value = p.tipo || '';
-    dp.marca.innerHTML = S.atual.marcas.map((m) => `<option value="${esc(m.id)}">${esc(m.nome)}</option>`).join('');
-    dp.marca.value = p.marca;
+    preencheMarcasProduto(p.marca);
     dp.categoria.value = p.categoria;
     dp.selo.value = p.selo || '';
     dp.preco.value = Core.formatarReais(p.preco);
     dp.preco30.value = Core.formatarReais(p.preco30);
     dp.antigo.value = Core.formatarReais(p.precoAntigo);
+    dp.promo.checked = typeof p.precoAntigo === 'number';
+    atualizaCamposPromo();
     $('#dp-preco30-rotulo').textContent = `Atacado (${S.atual.config.pecasFaixa2}+ peças)`;
     const d = ed.desc || {};
     dp.resumo.value = d.resumo || '';
@@ -563,12 +681,23 @@
     e.preventDefault();
     const nome = dp.nome.value.trim();
     if (!nome) return erroProduto('Digite o nome do produto.', dp.nome);
-    const preco = Core.lerReais(dp.preco.value);
+    const promoLigada = dp.promo.checked;
+    const brutoPreco = dp.preco.value.trim();
+    const porcento = promoLigada && brutoPreco.endsWith('%');
+    let preco = Core.lerReais(porcento ? '' : brutoPreco);
     const preco30 = Core.lerReais(dp.preco30.value);
-    const antigo = Core.lerReais(dp.antigo.value);
-    if (Number.isNaN(preco)) return erroProduto('O preço normal não é um número válido.', dp.preco);
+    const antigo = promoLigada ? Core.lerReais(dp.antigo.value) : null;
+    if (Number.isNaN(preco)) return erroProduto(promoLigada ? 'O preço promocional não é um número válido.' : 'O preço normal não é um número válido.', dp.preco);
     if (Number.isNaN(preco30)) return erroProduto('O preço de atacado não é um número válido.', dp.preco30);
-    if (Number.isNaN(antigo)) return erroProduto('O preço antigo não é um número válido.', dp.antigo);
+    if (promoLigada) {
+      if (antigo === null || Number.isNaN(antigo) || antigo <= 0) return erroProduto('Na promoção, digite o preço antigo (o de antes, que aparece riscado).', dp.antigo);
+      if (porcento) {
+        const pct = Core.lerReais(brutoPreco.slice(0, -1));
+        if (pct === null || Number.isNaN(pct) || pct <= 0 || pct >= 100) return erroProduto('Desconto inválido. Digite, por exemplo, 10%.', dp.preco);
+        preco = Math.round(antigo * (100 - pct)) / 100;
+      }
+      if (preco === null || !(preco < antigo)) return erroProduto('Na promoção, o preço promocional precisa ser menor que o preço antigo.', dp.preco);
+    }
 
     const p = ed.p;
     p.nome = nome;
@@ -778,23 +907,15 @@
 
   function adicionaPromo() {
     const p = produto($('#vt-promo-sel').value);
-    const bruto = $('#vt-promo-preco').value.trim();
-    const porcento = bruto.endsWith('%');
-    const lido = Core.lerReais(porcento ? bruto.slice(0, -1) : bruto);
     const falha = (msg) => mostraErro($('#vt-promo-erro'), msg);
     if (!p) return falha('Escolha o produto que vai entrar em promoção.');
-    if (lido === null || Number.isNaN(lido) || lido <= 0) return falha('Digite o preço promocional (ex.: 149,90) ou o desconto (ex.: 10%).');
-    if (porcento && lido >= 100) return falha('O desconto precisa ser menor que 100%.');
-    const novo = porcento ? Math.round(p.preco * (100 - lido)) / 100 : lido;
-    if (novo >= p.preco) return falha(`O preço promocional precisa ser menor que o preço de hoje (${brl(p.preco)}).`);
-    p.precoAntigo = p.preco;
-    p.preco = novo;
+    const r = calculaPromo(p, $('#vt-promo-preco').value);
+    if (r.erro) return falha(r.erro);
+    aplicaPromo(p, r.novo);
     $('#vt-promo-preco').value = '';
     desenhaVitrine();
     mudou();
-    mostraToast(typeof p.preco30 === 'number' && p.preco30 > novo
-      ? `Em promoção. Atenção: o atacado (${brl(p.preco30)}) ficou maior que o preço promocional; ajuste na aba Produtos.`
-      : `“${p.nome}” entrou em promoção (${pctTexto(p)}).`);
+    mostraToast(`“${p.nome}” entrou em promoção (${pctTexto(p)}).${avisoAtacado(p)}`);
   }
 
   const vitrine = $('#aba-vitrine');
@@ -815,9 +936,7 @@
       }
       case 'add-promo': adicionaPromo(); return;
       case 'encerrar-promo': {
-        const antes = { preco: p.preco, precoAntigo: p.precoAntigo };
-        if (p.precoAntigo > p.preco) p.preco = p.precoAntigo;
-        delete p.precoAntigo;
+        const antes = encerraPromo(p);
         desenhaVitrine();
         mudou();
         mostraToast(`Promoção de “${p.nome}” encerrada. O preço voltou para ${brl(p.preco)}.`, {
@@ -950,6 +1069,7 @@
   };
   dm.estilo.innerHTML = ESTILOS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('');
   let marcaEmEdicao = null;
+  let aoCriarMarca = null;
 
   function previaMarca() {
     dm.fundo.disabled = !dm.fundoUsar.checked;
@@ -959,8 +1079,10 @@
     dm.previa.textContent = dm.logo.value.trim() || dm.nome.value.trim() || 'Marca';
   }
   [dm.nome, dm.logo, dm.estilo, dm.cor, dm.fundoUsar, dm.fundo].forEach((el) => el.addEventListener('input', previaMarca));
+  dm.dlg.addEventListener('close', () => { aoCriarMarca = null; });
 
-  function abreMarca(id) {
+  function abreMarca(id, opcoes = {}) {
+    aoCriarMarca = opcoes.aoCriar || null;
     const m = id ? marcaDe(id) : null;
     marcaEmEdicao = m ? m.id : null;
     $('#dm-titulo').textContent = m ? 'Editar marca' : 'Nova marca';
@@ -985,6 +1107,7 @@
     if (dm.fundoUsar.checked) dados.fundo = dm.fundo.value;
     const sub = dm.sub.value.trim();
     if (sub) dados.sub = sub;
+    let idNova = null;
     if (marcaEmEdicao) {
       const m = marcaDe(marcaEmEdicao);
       for (const k of ['fundo', 'sub']) delete m[k];
@@ -992,12 +1115,15 @@
     } else {
       const id = Core.idUnico(Core.slug(nome) || 'marca', new Set(S.atual.marcas.map((x) => x.id)));
       S.atual.marcas.push({ id, ...dados });
+      idNova = id;
     }
     dm.dlg.close();
     desenhaFiltroMarcas();
     desenhaMarcas();
     mudou();
     mostraToast(marcaEmEdicao ? 'Marca atualizada. Falta publicar.' : 'Marca criada. Agora você já pode cadastrar produtos dela.');
+    if (aoCriarMarca && idNova) aoCriarMarca(idNova);
+    aoCriarMarca = null;
   });
 
   $('#btn-nova-marca').addEventListener('click', () => abreMarca(null));

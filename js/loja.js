@@ -453,6 +453,22 @@
       </button>
     </li>`).join('');
 
+  // logos compridos quebram em linhas e encolhem até caber no círculo (os que já cabem não mudam)
+  function ajustaLogos() {
+    $$('.marca-item__logo').forEach((el) => {
+      el.classList.remove('marca-item__logo--longo');
+      el.style.fontSize = '';
+      const cabe = () => el.scrollWidth <= el.clientWidth && el.scrollHeight <= el.clientHeight;
+      if (cabe()) return;
+      el.classList.add('marca-item__logo--longo');
+      let tam = parseFloat(getComputedStyle(el).fontSize);
+      const minimo = tam * 0.5;
+      while (!cabe() && tam > minimo) { tam -= 0.5; el.style.fontSize = `${tam}px`; }
+    });
+  }
+  ajustaLogos();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustaLogos);
+
   const promocoes = PRODUTOS.filter((p) => temPreco(p) && p.precoAntigo);
   $('#grade-promocoes').innerHTML = promocoes.map(cartao).join('');
   $('#promocoes').closest('.faixa-branca').hidden = !promocoes.length;

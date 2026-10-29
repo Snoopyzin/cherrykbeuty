@@ -9,9 +9,9 @@ Acesso: `https://<site>/admin.html` (não tem link no site e está marcada como 
 
 O que ela faz:
 
-- Preços direto na lista (normal, atacado, preço antigo para promoções).
+- Preços direto na lista (normal, atacado, preço antigo para promoções). Cada produto tem um botão **+ Promoção** (liga/desliga na própria linha, e também uma caixa "Colocar este produto em promoção" ao criar ou editar): ao ligar, o preço de hoje vira o "antigo" riscado e ela digita o novo preço ou um desconto como "10%"; ao desligar, volta ao preço antigo.
 - Criar, editar e excluir produtos, com foto (convertida para WebP quadrado de até 800 px) e descrição completa.
-- Criar, editar e excluir marcas.
+- Criar, editar e excluir marcas. Ao cadastrar um produto, o campo **Marca** tem a opção "+ Criar nova marca…". Nomes de marca compridos (ex.: "Victoria's Secret") quebram em linhas e encolhem para caber no círculo da seção Marcas.
 - **Vitrine:** escolher o que fica em **Promoções!** (seção no topo da página inicial, logo abaixo da faixa rolante; é só escolher o produto e digitar o novo preço ou um desconto como "10%", e o preço de hoje vira o "antigo" riscado), marcar **Lançamentos** (etiqueta `selo: 'Lançamento'`) e criar as próprias seções.
 - **Suas próprias seções:** ela cria quantas seções quiser (ex.: "Mais vendidos", "Kits"), escolhe os produtos de cada uma e a ordem. Ficam em `CHERRY_CONFIG.secoes` (`id`, `titulo`, `texto` opcional e `produtos`) e aparecem na página inicial logo abaixo das Promoções; seção sem produto não aparece.
 - Regras: peças para o atacado, valor do Atacado Express, WhatsApp e o **desconto por seguir no Instagram** (`descontoSeguir` e `perfisInstagram` em `CHERRY_CONFIG`; 0% esconde o aviso da página inicial).

@@ -23,7 +23,7 @@
   }
 
   const semAcento = (t) => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '');
-  const slug = (t) => semAcento(t).toLowerCase().replace(/&/g, ' e ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  const slug = (t) => semAcento(t).toLowerCase().replace(/['’‘`´]/g, '').replace(/&/g, ' e ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   const escRe = (t) => String(t).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
   function idUnico(base, existentes) {

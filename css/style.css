@@ -684,6 +684,8 @@ section[id] { scroll-margin-top: calc(var(--topo-h) + 8px); }
 .marca-item__logo--script    { font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 1.15rem; }
 .marca-item__logo--serif     { font-family: var(--serif); font-style: italic; font-weight: 700; font-size: 1.9rem; }
 .marca-item__logo--coreano   { font-family: var(--coreano); font-size: .82rem; writing-mode: vertical-rl; letter-spacing: .02em; }
+/* nome comprido (ex.: "Victoria's Secret"): quebra em linhas e o js/loja.js encolhe a letra até caber */
+.marca-item__logo--longo { white-space: normal; text-align: center; line-height: 1.08; padding: 0 6px; }
 .marca-item__nome {
   display: grid;
   font-size: .64rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; line-height: 1.35;
