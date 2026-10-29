@@ -58,7 +58,7 @@ window.CHERRY_PRODUTOS = [
   // ---------- Medicube ----------
   { id: 'medicube-kojic-pad-turmeric', marca: 'medicube', categoria: 'skincare',
     nome: 'Kojic A.T Pad Turmeric – 70 discos (160g)', tipo: 'Pads clareadores',
-    preco: 200, preco30: 170, imagem: FOTO('medicube-kojic-pad-turmeric'),
+    preco: 199, preco30: 170, imagem: FOTO('medicube-kojic-pad-turmeric'),
     arte: { forma: 'pote', corpo: '#f3ecd9', tampa: '#f4c542', texto: '#6b5a2a' } },
 
   { id: 'medicube-zero-pore-pad', marca: 'medicube', categoria: 'skincare',
