@@ -30,6 +30,8 @@ window.CHERRY_CONFIG = {
   descontoSeguir: 10,
   // Perfis do Instagram a seguir: só o nome de usuário, sem o @
   perfisInstagram: ['abiacamps', 'cherrykbeauty_'],
+  // Seções extras da página inicial, criadas no painel (ex.: "Mais vendidos"). Cada uma: id, titulo, texto (opcional) e a lista de ids de produtos, na ordem em que aparecem.
+  secoes: [],
 };
 
 window.CHERRY_MARCAS = [

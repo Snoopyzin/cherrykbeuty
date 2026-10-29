@@ -40,7 +40,7 @@
     const perfis = (window.CHERRY_CONFIG.perfisInstagram || []).filter(Boolean);
     blocoInsta.hidden = !(desconto > 0 && perfis.length);
     $$('[data-desconto-seguir]').forEach((el) => { el.textContent = `${desconto}%`; });
-    $('#insta-perfis').innerHTML = perfis.map((u) => `<li><a class="btn btn--primario btn--insta" href="https://www.instagram.com/${encodeURIComponent(u)}/" target="_blank" rel="noopener">${ICONE_INSTA}@${esc(u)}</a></li>`).join('');
+    $('#insta-perfis').innerHTML = perfis.map((u) => `<a href="https://www.instagram.com/${encodeURIComponent(u)}/" target="_blank" rel="noopener">${ICONE_INSTA}@${esc(u)}</a>`).join('');
   }
 
   // botão "Atacado Express": abre o WhatsApp com a mensagem pronta
@@ -122,7 +122,8 @@
     return '';
   }
 
-  const precoFaixa2 = (p) => p.preco30 ?? p.preco;
+  // atacado nunca sai mais caro que o preço normal (ex.: produto em promoção abaixo do preço de atacado)
+  const precoFaixa2 = (p) => Math.min(p.preco30 ?? p.preco, p.preco);
 
   function preco(p) {
     if (!temPreco(p)) return '<p class="produto__preco produto__preco--breve">Preço em breve</p>';
@@ -456,10 +457,22 @@
   $('#grade-promocoes').innerHTML = promocoes.map(cartao).join('');
   $('#promocoes').closest('.faixa-branca').hidden = !promocoes.length;
 
-  // destaques: produtos marcados com destaque: true (escolhidos no painel)
-  const destaques = PRODUTOS.filter((p) => p.destaque);
-  $('#grade-destaques').innerHTML = destaques.map(cartao).join('');
-  $('#destaques').hidden = !destaques.length;
+  // seções extras criadas no painel (CHERRY_CONFIG.secoes), na ordem do painel; só aparecem se tiverem produtos
+  const caixaSecoes = $('#secoes-extras');
+  if (caixaSecoes) {
+    caixaSecoes.innerHTML = (window.CHERRY_CONFIG.secoes || []).map((s) => {
+      const itens = [...new Set(s.produtos || [])].map((id) => produtoPorId[id]).filter(Boolean);
+      if (!itens.length || !s.titulo) return '';
+      const sid = `secao-${esc(s.id)}`;
+      return `<section class="secao" id="${sid}" aria-labelledby="${sid}-titulo">
+        <div class="secao__topo">
+          <h2 class="secao__titulo" id="${sid}-titulo">${esc(s.titulo)}</h2>${s.texto ? `
+          <p class="secao__texto">${esc(s.texto)}</p>` : ''}
+        </div>
+        <div class="produtos">${itens.map(cartao).join('')}</div>
+      </section>`;
+    }).join('');
+  }
 
   // busca: nome, marca, tipo e ativos pesam mais; resumo e benefícios entram como complemento
   const indice = Object.fromEntries(PRODUTOS.map((p) => {

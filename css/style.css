@@ -273,6 +273,42 @@ ul { list-style: none; margin: 0; padding: 0; }
   color: var(--branco);
 }
 
+/* desconto por seguir no Instagram (cartão do topo) */
+.hero__desconto {
+  display: flex; align-items: center; gap: .85rem;
+  width: fit-content; max-width: 25.5rem;
+  margin: .9rem auto 0;
+  padding: .55rem 1.1rem .55rem .6rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 10px 24px -14px rgba(74, 10, 22, .6);
+  text-align: left;
+}
+.hero__desconto[hidden] { display: none; }
+.hero__desconto-selo {
+  display: grid; place-content: center; justify-items: center; flex: none;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--coral); color: var(--branco);
+  line-height: 1;
+}
+.hero__desconto-selo strong { font-family: var(--serif); font-size: 1.3rem; font-weight: 700; font-variant-numeric: lining-nums; }
+.hero__desconto-selo small { margin-top: 1px; padding-left: .2em; font-size: .5rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+.hero__desconto-texto { margin: 0; font-size: .8rem; font-weight: 500; line-height: 1.35; color: var(--cereja-escura); }
+.hero__desconto-texto strong { font-weight: 700; color: var(--cereja); }
+.hero__desconto-perfis { display: flex; flex-wrap: wrap; gap: .4rem; margin: .4rem 0 0; }
+.hero__desconto-perfis a {
+  display: inline-flex; align-items: center; gap: .35rem;
+  padding: .3rem .8rem .3rem .65rem;
+  border-radius: 999px;
+  background: var(--cereja); color: var(--branco);
+  font-size: .76rem; font-weight: 600; text-decoration: none;
+  transition: background-color .2s, transform .2s var(--ease);
+}
+.hero__desconto-perfis a:hover { background: var(--cereja-escura); transform: translateY(-1px); }
+.hero__desconto-perfis svg { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.hero__desconto-perfis svg circle:last-child { fill: currentColor; stroke: none; }
+
 .hero__cta {
   display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem;
   margin-top: 1.6rem;
@@ -1180,48 +1216,6 @@ a.produto__midia { cursor: pointer; }
   }
   .faixa__trilho { animation: none; }
   html { scroll-behavior: auto; }
-}
-
-/* ---------- Desconto: seguir no Instagram ---------- */
-
-.insta { padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 56px) 0; }
-.insta[hidden] { display: none; }
-.insta__caixa {
-  display: grid; gap: 18px; justify-items: center; text-align: center;
-  max-width: 1320px; margin: 0 auto;
-  padding: clamp(26px, 4vw, 38px) clamp(20px, 4vw, 48px);
-  border-radius: 28px;
-  background: var(--branco);
-  box-shadow: 0 1px 0 rgba(122, 20, 38, .06), 0 24px 48px -34px rgba(74, 10, 22, .6);
-  outline: 2px dashed rgba(194, 64, 77, .45); outline-offset: -10px;
-}
-.insta__selo {
-  display: grid; place-content: center; justify-items: center;
-  width: 92px; height: 92px; margin: 0;
-  border-radius: 50%;
-  background: var(--coral); color: var(--branco);
-  box-shadow: 0 14px 26px -14px rgba(194, 64, 77, .9);
-  line-height: 1;
-}
-.insta__selo strong { font-family: var(--serif); font-size: 2.1rem; font-weight: 700; font-variant-numeric: lining-nums; }
-.insta__selo small { margin-top: 2px; padding-left: .26em; font-size: .6rem; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; }
-.insta__titulo {
-  margin: 0;
-  font-family: var(--serif); font-weight: 600;
-  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.3rem); line-height: 1.1;
-  color: var(--cereja);
-  font-variant-numeric: lining-nums;
-}
-.insta__titulo span { color: var(--coral-escuro); }
-.insta__perfis { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 0; padding: 0; list-style: none; }
-.btn--insta { gap: .6rem; font-size: .92rem; letter-spacing: .02em; text-transform: none; }
-.btn--insta svg {
-  width: 20px; height: 20px; flex: none;
-  fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
-}
-.btn--insta svg circle:last-child { fill: currentColor; stroke: none; }
-@media (min-width: 900px) {
-  .insta__caixa { grid-template-columns: auto minmax(0, 1fr) auto; justify-items: start; text-align: left; gap: 30px; }
 }
 
 /* ---------- Consultar no WhatsApp ---------- */

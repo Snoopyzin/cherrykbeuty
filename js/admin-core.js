@@ -455,6 +455,20 @@
       if (c.descontoSeguir > 0 && !perfis.length) erros.push({ texto: 'Informe ao menos um perfil do Instagram para o desconto (ou coloque 0% para esconder o aviso).' });
       if (perfis.some((p) => !/^[A-Za-z0-9._]{1,30}$/.test(p))) erros.push({ texto: 'Há um perfil do Instagram com nome inválido (use só letras, números, ponto e sublinhado).' });
     }
+    if (c.secoes !== undefined) {
+      if (!Array.isArray(c.secoes)) {
+        erros.push({ texto: 'As seções da página inicial estão num formato inválido.' });
+      } else {
+        const vistas = new Set();
+        for (const s of c.secoes) {
+          if (!String(s.titulo || '').trim()) erros.push({ texto: 'Há uma seção da página inicial sem título.' });
+          if (!s.id || vistas.has(s.id)) erros.push({ texto: `Seção repetida ou sem código: ${s.titulo || s.id}` });
+          vistas.add(s.id);
+          const sumiram = (s.produtos || []).filter((id) => !d.produtos.some((p) => p.id === id));
+          if (sumiram.length) avisos.push({ texto: `A seção “${s.titulo}” tem produtos que não existem mais: ${sumiram.join(', ')}.` });
+        }
+      }
+    }
     return { erros, avisos };
   }
 

@@ -24,7 +24,7 @@
   const FORMAS = [['pote', 'Pote'], ['bisnaga', 'Bisnaga / tubo'], ['spray', 'Spray'], ['conta-gotas', 'Conta-gotas'], ['frasco', 'Frasco'], ['pump', 'Frasco com bomba'], ['caneta', 'Caneta'], ['caixa', 'Caixa / ampolas']];
   const ESTILOS = [['sans', 'Moderna em negrito'], ['sans-leve', 'Moderna leve'], ['espacado', 'Letras espaçadas'], ['script', 'Cursiva'], ['serif', 'Elegante com serifa'], ['coreano', 'Coreano']];
   const ARTE_PADRAO = { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' };
-  const ROTULOS = { preco: 'Preço', preco30: 'Atacado', precoAntigo: 'Preço antigo', nome: 'Nome', tipo: 'Texto curto', marca: 'Marca', categoria: 'Categoria', selo: 'Etiqueta', imagem: 'Foto', arte: 'Ilustração', destaque: 'Destaque' };
+  const ROTULOS = { preco: 'Preço', preco30: 'Atacado', precoAntigo: 'Preço antigo', nome: 'Nome', tipo: 'Texto curto', marca: 'Marca', categoria: 'Categoria', selo: 'Etiqueta', imagem: 'Foto', arte: 'Ilustração' };
 
   const S = {
     original: null,            // como está no site
@@ -242,7 +242,7 @@
   }
 
   function avisoLinha(p) {
-    if (temPreco(p) && typeof p.preco30 === 'number' && p.preco30 > p.preco) return 'O preço de atacado está maior que o preço normal.';
+    if (temPreco(p) && typeof p.preco30 === 'number' && p.preco30 > p.preco) return 'O preço de atacado está maior que o preço normal; o site vai cobrar o menor dos dois.';
     if (typeof p.precoAntigo === 'number' && !ehPromo(p)) return 'Para virar promoção, o preço antigo precisa ser maior que o preço atual.';
     return '';
   }
@@ -267,7 +267,6 @@
         <p class="item__marca">${esc(m ? m.nome : p.marca)}</p>
         <h3 class="item__nome">${esc(p.nome)}</h3>
         <div class="etiquetas">${etiquetas(p)}</div>
-        <button class="estrela" type="button" data-acao="destaque" aria-pressed="${p.destaque ? 'true' : 'false'}">Destaque</button>
       </div>
       <div class="item__precos">
         ${campoPreco(p, 'preco', 'Normal', 'em breve')}
@@ -288,7 +287,6 @@
       if (S.filtro.cat !== 'todos' && p.categoria !== S.filtro.cat) return false;
       if (S.filtro.marca && p.marca !== S.filtro.marca) return false;
       const mostrar = S.filtro.mostrar;
-      if (mostrar === 'destaque' && !p.destaque) return false;
       if (mostrar === 'promo' && !ehPromo(p)) return false;
       if (mostrar === 'sem-preco' && temPreco(p)) return false;
       if (mostrar === 'mudou' && !estadoLinha(p)) return false;
@@ -365,14 +363,6 @@
     const id = b.closest('.item').dataset.id;
     if (b.dataset.acao === 'editar') abreProduto(id);
     if (b.dataset.acao === 'desfazer') desfazProduto(id);
-    if (b.dataset.acao === 'destaque') {
-      const p = produto(id);
-      if (p.destaque) delete p.destaque; else p.destaque = true;
-      b.setAttribute('aria-pressed', p.destaque ? 'true' : 'false');
-      atualizaLinha(id);
-      mudou();
-      if (S.filtro.mostrar === 'destaque' && !p.destaque) desenhaLista();
-    }
   });
 
   // foto que não carregou: mostra o aviso em vez do ícone quebrado
@@ -387,6 +377,7 @@
     if (!o) {
       S.atual.produtos.splice(i, 1);
       delete S.atual.descricoes[id];
+      tiraDasSecoes(id);
     } else {
       S.atual.produtos[i] = Core.clonar(o);
       if (S.original.descricoes[id]) S.atual.descricoes[id] = Core.clonar(S.original.descricoes[id]);
@@ -481,7 +472,7 @@
 
   const dp = {
     dlg: $('#dlg-produto'), form: $('#form-produto'),
-    nome: $('#dp-nome'), tipo: $('#dp-tipo'), marca: $('#dp-marca'), categoria: $('#dp-categoria'), selo: $('#dp-selo'), destaque: $('#dp-destaque'),
+    nome: $('#dp-nome'), tipo: $('#dp-tipo'), marca: $('#dp-marca'), categoria: $('#dp-categoria'), selo: $('#dp-selo'),
     preco: $('#dp-preco'), preco30: $('#dp-preco30'), antigo: $('#dp-antigo'),
     resumo: $('#dp-resumo'), serve: $('#dp-serve'), beneficios: $('#dp-beneficios'), ativos: $('#dp-ativos'), rotina: $('#dp-rotina'), importante: $('#dp-importante'),
     forma: $('#dp-forma'), corpo: $('#dp-cor-corpo'), tampa: $('#dp-cor-tampa'), texto: $('#dp-cor-texto'),
@@ -512,7 +503,6 @@
     dp.marca.value = p.marca;
     dp.categoria.value = p.categoria;
     dp.selo.value = p.selo || '';
-    dp.destaque.checked = !!p.destaque;
     dp.preco.value = Core.formatarReais(p.preco);
     dp.preco30.value = Core.formatarReais(p.preco30);
     dp.antigo.value = Core.formatarReais(p.precoAntigo);
@@ -587,7 +577,6 @@
     p.categoria = dp.categoria.value;
     const selo = dp.selo.value.trim();
     if (selo) p.selo = selo; else delete p.selo;
-    if (dp.destaque.checked) p.destaque = true; else delete p.destaque;
     p.preco = preco;
     if (preco30 === null) delete p.preco30; else p.preco30 = preco30;
     if (antigo === null) delete p.precoAntigo; else p.precoAntigo = antigo;
@@ -640,8 +629,10 @@
     const i = S.atual.produtos.findIndex((x) => x.id === p.id);
     const original = S.atual.produtos[i];
     const desc = S.atual.descricoes[p.id];
+    const secoesAntes = S.atual.config.secoes ? Core.clonar(S.atual.config.secoes) : undefined;
     S.atual.produtos.splice(i, 1);
     delete S.atual.descricoes[p.id];
+    tiraDasSecoes(p.id);
     dp.dlg.close();
     desenhaLista();
     mudou();
@@ -650,6 +641,7 @@
       fn: () => {
         S.atual.produtos.splice(i, 0, original);
         if (desc) S.atual.descricoes[p.id] = desc;
+        if (secoesAntes) S.atual.config.secoes = secoesAntes;
         desenhaLista();
         mudou();
       },
@@ -658,9 +650,8 @@
 
   $('#btn-novo-produto').addEventListener('click', () => abreProduto(null));
 
-  /* ---------- Vitrine: destaques, promoções e lançamentos ---------- */
+  /* ---------- Vitrine: promoções, lançamentos e seções próprias ---------- */
 
-  const MAX_DESTAQUES = 8;
   const LANCAMENTO = 'Lançamento';
   const ehLancamento = (p) => norm(p.selo) === 'lancamento';
   const precoTexto = (p) => (temPreco(p) ? brl(p.preco) : 'sem preço ainda');
@@ -680,7 +671,7 @@
     }</optgroup>`).join('');
   }
 
-  function linhaVitrine(p, { acao, rotulo, extra = '', depois = '' }) {
+  function linhaVitrine(p, { acao, rotulo, extra = '', depois = '', botoes = '' }) {
     const m = marcaDe(p.marca);
     return `<div class="vt-row" data-id="${esc(p.id)}">
       <div class="item__foto">${miniatura(p)}</div>
@@ -689,9 +680,60 @@
         <p class="vt-row__nome">${esc(p.nome)}</p>
         ${extra}
       </div>
-      <button class="link" type="button" data-acao="${acao}">${rotulo}</button>
+      ${botoes || `<button class="link" type="button" data-acao="${acao}">${rotulo}</button>`}
       ${depois}
     </div>`;
+  }
+
+  /* ----- seções extras (CHERRY_CONFIG.secoes) ----- */
+
+  const secoesCfg = () => S.atual.config.secoes || [];
+  const secaoPor = (sid) => secoesCfg().find((s) => s.id === sid);
+  const tiraDasSecoes = (id) => { for (const s of secoesCfg()) s.produtos = (s.produtos || []).filter((x) => x !== id); };
+  const troca = (lista, i, j) => { if (i >= 0 && j >= 0 && i < lista.length && j < lista.length) [lista[i], lista[j]] = [lista[j], lista[i]]; };
+
+  function desenhaSecoes() {
+    const lista = secoesCfg();
+    const caixa = $('#vt-secoes');
+    if (!lista.length) { caixa.innerHTML = '<p class="vt-vazio">Você ainda não criou nenhuma seção.</p>'; return; }
+    caixa.innerHTML = lista.map((s, i) => {
+      const ids = s.produtos || [];
+      const itens = ids.map((id) => produto(id)).filter(Boolean);
+      const livres = S.atual.produtos.filter((p) => !ids.includes(p.id));
+      const sid = esc(s.id);
+      const linhas = itens.map((p, j) => linhaVitrine(p, {
+        extra: `<p class="vt-row__extra">${esc(precoTexto(p))}</p>`,
+        botoes: `<span class="vt-row__acoes">
+          <button class="mini" type="button" data-acao="prod-subir" aria-label="Subir ${esc(p.nome)}"${j === 0 ? ' disabled' : ''}>↑</button>
+          <button class="mini" type="button" data-acao="prod-descer" aria-label="Descer ${esc(p.nome)}"${j === itens.length - 1 ? ' disabled' : ''}>↓</button>
+          <button class="link" type="button" data-acao="prod-tirar">Tirar</button>
+        </span>`,
+      })).join('');
+      return `<div class="vt-secao" data-sid="${sid}">
+        <div class="vt-secao__topo">
+          <div class="campo">
+            <label for="sec-t-${sid}">Título da seção</label>
+            <input id="sec-t-${sid}" type="text" maxlength="40" autocomplete="off" data-sec="titulo" value="${esc(s.titulo)}">
+          </div>
+          <div class="vt-secao__acoes">
+            <button class="mini" type="button" data-acao="secao-subir" aria-label="Subir a seção ${esc(s.titulo)}"${i === 0 ? ' disabled' : ''}>↑</button>
+            <button class="mini" type="button" data-acao="secao-descer" aria-label="Descer a seção ${esc(s.titulo)}"${i === lista.length - 1 ? ' disabled' : ''}>↓</button>
+            <button class="link" type="button" data-acao="secao-excluir">Excluir seção</button>
+          </div>
+        </div>
+        <div class="campo">
+          <label for="sec-x-${sid}">Texto curto abaixo do título <small>(opcional)</small></label>
+          <input id="sec-x-${sid}" type="text" maxlength="120" autocomplete="off" data-sec="texto" value="${esc(s.texto || '')}">
+        </div>
+        <div class="vt-lista">${linhas || '<p class="vt-vazio">Nenhum produto nesta seção ainda.</p>'}</div>
+        <div class="vt-add">
+          <label class="sr-only" for="sec-s-${sid}">Produto para adicionar na seção ${esc(s.titulo)}</label>
+          <select id="sec-s-${sid}"><option value="">Escolha um produto…</option>${opcoesProdutos(livres, false)}</select>
+          <button class="btn btn--prim btn--peq" type="button" data-acao="secao-add">Adicionar</button>
+        </div>
+        ${itens.length ? '' : '<p class="campo__ajuda">Esta seção só aparece no site quando tiver pelo menos 1 produto.</p>'}
+      </div>`;
+    }).join('');
   }
 
   function linhaPromo(p) {
@@ -710,21 +752,14 @@
   function ajudaPromo() {
     const p = produto($('#vt-promo-sel').value);
     $('#vt-promo-ajuda').textContent = p
-      ? `Preço de hoje: ${brl(p.preco)}. Digite o novo preço (menor que esse); o preço de hoje passa a aparecer riscado.`
-      : 'Escolha o produto e digite o novo preço. O preço de hoje passa a aparecer riscado.';
+      ? `Preço de hoje: ${brl(p.preco)}. Digite o novo preço (menor que esse, ex.: 149,90) ou o desconto (ex.: 10%); o preço de hoje passa a aparecer riscado.`
+      : 'Escolha o produto e digite o novo preço (ex.: 149,90) ou o desconto (ex.: 10%). O preço de hoje passa a aparecer riscado.';
   }
 
   function desenhaVitrine() {
     const prods = S.atual.produtos;
     const vazio = (t) => `<p class="vt-vazio">${t}</p>`;
     const escolha = '<option value="">Escolha um produto…</option>';
-
-    const dest = prods.filter((p) => p.destaque);
-    $('#vt-dest-lista').innerHTML = dest.length
-      ? dest.map((p) => linhaVitrine(p, { acao: 'tirar-destaque', rotulo: 'Tirar', extra: `<p class="vt-row__extra">${esc(precoTexto(p))}</p>` })).join('')
-      : vazio('Nenhum produto em destaque ainda.');
-    $('#vt-dest-sel').innerHTML = escolha + opcoesProdutos(prods.filter((p) => !p.destaque), false);
-    $('#vt-dest-info').textContent = dest.length > MAX_DESTAQUES ? `${dest.length} produtos em destaque. Muitos destaques perdem o efeito: o ideal é até ${MAX_DESTAQUES}.` : '';
 
     const promos = prods.filter((p) => typeof p.precoAntigo === 'number');
     $('#vt-promo-lista').innerHTML = promos.length ? promos.map(linhaPromo).join('') : vazio('Nenhum produto em promoção.');
@@ -737,14 +772,20 @@
       ? lanc.map((p) => linhaVitrine(p, { acao: 'tirar-lanc', rotulo: 'Tirar', extra: `<p class="vt-row__extra">${esc(precoTexto(p))}</p>` })).join('')
       : vazio('Nenhum lançamento marcado.');
     $('#vt-lanc-sel').innerHTML = escolha + opcoesProdutos(prods.filter((p) => !ehLancamento(p)), false);
+
+    desenhaSecoes();
   }
 
   function adicionaPromo() {
     const p = produto($('#vt-promo-sel').value);
-    const novo = Core.lerReais($('#vt-promo-preco').value);
+    const bruto = $('#vt-promo-preco').value.trim();
+    const porcento = bruto.endsWith('%');
+    const lido = Core.lerReais(porcento ? bruto.slice(0, -1) : bruto);
     const falha = (msg) => mostraErro($('#vt-promo-erro'), msg);
     if (!p) return falha('Escolha o produto que vai entrar em promoção.');
-    if (novo === null || Number.isNaN(novo) || novo <= 0) return falha('Digite o preço promocional (um valor maior que zero).');
+    if (lido === null || Number.isNaN(lido) || lido <= 0) return falha('Digite o preço promocional (ex.: 149,90) ou o desconto (ex.: 10%).');
+    if (porcento && lido >= 100) return falha('O desconto precisa ser menor que 100%.');
+    const novo = porcento ? Math.round(p.preco * (100 - lido)) / 100 : lido;
     if (novo >= p.preco) return falha(`O preço promocional precisa ser menor que o preço de hoje (${brl(p.preco)}).`);
     p.precoAntigo = p.preco;
     p.preco = novo;
@@ -765,13 +806,6 @@
     const p = linha ? produto(linha.dataset.id) : null;
     const escolhido = (sel) => produto($(sel).value);
     switch (b.dataset.acao) {
-      case 'tirar-destaque': delete p.destaque; break;
-      case 'add-destaque': {
-        const alvo = escolhido('#vt-dest-sel');
-        if (!alvo) { mostraToast('Escolha um produto na lista.'); return; }
-        alvo.destaque = true;
-        break;
-      }
       case 'tirar-lanc': delete p.selo; break;
       case 'add-lanc': {
         const alvo = escolhido('#vt-lanc-sel');
@@ -792,10 +826,78 @@
         });
         return;
       }
+      case 'add-secao': {
+        const campo = $('#vt-secao-nome');
+        const titulo = campo.value.trim();
+        if (!titulo) { mostraToast('Digite o nome da nova seção.'); campo.focus(); return; }
+        const lista = S.atual.config.secoes || (S.atual.config.secoes = []);
+        const id = Core.idUnico(Core.slug(titulo) || 'secao', new Set(lista.map((s) => s.id)));
+        lista.push({ id, titulo, produtos: [] });
+        campo.value = '';
+        desenhaVitrine();
+        mudou();
+        const sel = document.getElementById(`sec-s-${id}`);
+        if (sel) { sel.scrollIntoView({ block: 'center', behavior: 'smooth' }); sel.focus({ preventScroll: true }); }
+        mostraToast(`Seção “${titulo}” criada. Agora escolha os produtos dela.`);
+        return;
+      }
+      case 'secao-subir':
+      case 'secao-descer': {
+        const lista = S.atual.config.secoes;
+        const i = lista.indexOf(secaoPor(b.closest('.vt-secao').dataset.sid));
+        troca(lista, i, i + (b.dataset.acao === 'secao-subir' ? -1 : 1));
+        break;
+      }
+      case 'secao-excluir': {
+        const lista = S.atual.config.secoes;
+        const sec = secaoPor(b.closest('.vt-secao').dataset.sid);
+        const i = lista.indexOf(sec);
+        lista.splice(i, 1);
+        desenhaVitrine();
+        mudou();
+        mostraToast(`Seção “${sec.titulo}” excluída.`, {
+          texto: 'Desfazer',
+          fn: () => { (S.atual.config.secoes || (S.atual.config.secoes = [])).splice(i, 0, sec); desenhaVitrine(); mudou(); },
+        });
+        return;
+      }
+      case 'secao-add': {
+        const sec = secaoPor(b.closest('.vt-secao').dataset.sid);
+        const alvo = produto($('select', b.closest('.vt-add')).value);
+        if (!alvo) { mostraToast('Escolha um produto na lista.'); return; }
+        (sec.produtos || (sec.produtos = [])).push(alvo.id);
+        break;
+      }
+      case 'prod-subir':
+      case 'prod-descer': {
+        const sec = secaoPor(b.closest('.vt-secao').dataset.sid);
+        sec.produtos = sec.produtos.filter((id) => produto(id));
+        const i = sec.produtos.indexOf(linha.dataset.id);
+        troca(sec.produtos, i, i + (b.dataset.acao === 'prod-subir' ? -1 : 1));
+        break;
+      }
+      case 'prod-tirar': {
+        const sec = secaoPor(b.closest('.vt-secao').dataset.sid);
+        sec.produtos = sec.produtos.filter((id) => id !== linha.dataset.id);
+        break;
+      }
       default: return;
     }
     desenhaVitrine();
     mudou();
+  });
+
+  // título e texto das seções próprias: edita no lugar, sem redesenhar
+  $('#vt-secoes').addEventListener('input', (e) => {
+    const campo = e.target.dataset.sec;
+    if (!campo) return;
+    const sec = secaoPor(e.target.closest('.vt-secao').dataset.sid);
+    const v = e.target.value.trim();
+    if (campo === 'texto') { if (v) sec.texto = v; else delete sec.texto; } else sec.titulo = v;
+    mudou();
+  });
+  $('#vt-secao-nome').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); $('[data-acao="add-secao"]').click(); }
   });
 
   $('#vt-promo-sel').addEventListener('change', () => { ajudaPromo(); $('#vt-promo-erro').hidden = true; });
@@ -1087,7 +1189,6 @@
     return p ? p.nome : id;
   };
   const fmtValor = (k, v) => {
-    if (k === 'destaque') return v ? 'sim' : 'não';
     if (v === undefined || v === null || v === '') return 'vazio';
     if (typeof v === 'number') return brl(v);
     if (k === 'imagem') return 'foto';
@@ -1118,7 +1219,7 @@
     for (const id of c.marcas.removidos) itens.push({ titulo: `Marca excluída: ${id}`, detalhe: '' });
     const rotuloCfg = {
       pecasFaixa2: 'Atacado a partir de', expressMinimo: 'Atacado Express a partir de', whatsapp: 'WhatsApp', mensagemConsulta: 'Mensagem do botão Express',
-      descontoSeguir: 'Desconto por seguir no Instagram', perfisInstagram: 'Perfis do Instagram',
+      descontoSeguir: 'Desconto por seguir no Instagram', perfisInstagram: 'Perfis do Instagram', secoes: 'Suas seções da página inicial',
     };
     for (const [k, v] of Object.entries(c.config)) {
       const antes = S.original.config[k];
@@ -1128,6 +1229,7 @@
         if (k === 'whatsapp') return formataZap(x);
         if (k === 'descontoSeguir') return `${x ?? 0}%`;
         if (k === 'perfisInstagram') return textoPerfis(x) || 'nenhum';
+        if (k === 'secoes') return (x || []).map((s) => `${s.titulo} (${(s.produtos || []).length})`).join(', ') || 'nenhuma';
         return `“${x}”`;
       };
       itens.push({ titulo: `Regras: ${rotuloCfg[k] || k}`, detalhe: k === 'mensagemConsulta' ? 'texto alterado' : `${fmt(antes)} → ${fmt(v)}` });
@@ -1149,7 +1251,8 @@
       prodTocados(c.produtos.removidos.length, 'produto excluído', 'produtos excluídos'),
       prodTocados(outros, 'produto editado', 'produtos editados'),
       prodTocados(c.marcas.adicionados.length + Object.keys(c.marcas.alterados).length + c.marcas.removidos.length, 'marca', 'marcas'),
-      Object.keys(c.config).length ? 'regras da loja' : '',
+      Object.keys(c.config).some((k) => k !== 'secoes') ? 'regras da loja' : '',
+      'secoes' in c.config ? 'seções da página inicial' : '',
     ].filter(Boolean);
     return `Painel da loja: ${partes.join(', ') || 'atualização do catálogo'}`;
   }

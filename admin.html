@@ -58,7 +58,6 @@
           <span class="sr-only">Mostrar</span>
           <select id="f-mostrar">
             <option value="">Mostrar: todos</option>
-            <option value="destaque">Só os destaques</option>
             <option value="promo">Só as promoções</option>
             <option value="sem-preco">Só os sem preço</option>
             <option value="mudou">Só os alterados</option>
@@ -71,7 +70,7 @@
         </div>
         <button class="btn btn--prim" id="btn-novo-produto" type="button">+ Novo produto</button>
       </div>
-      <p class="dica">Mude os preços direto na lista, é só digitar. Toque em <strong>★ Destaque</strong> para o produto aparecer na página inicial. Para trocar foto, nome ou descrição, toque em <strong>Editar tudo</strong>. Promoções e lançamentos ficam mais fáceis na aba <strong>Vitrine</strong>. Nada vai para o site até você tocar em <strong>Publicar</strong>.</p>
+      <p class="dica">Mude os preços direto na lista, é só digitar. Para trocar foto, nome ou descrição, toque em <strong>Editar tudo</strong>. Para escolher o que fica em <strong>promoção</strong> (e o que aparece no topo do site), use a aba <strong>Vitrine</strong>. Nada vai para o site até você tocar em <strong>Publicar</strong>.</p>
       <p class="contagem" id="lista-contagem" aria-live="polite"></p>
       <div class="lista" id="lista-produtos"><p class="carregando">Carregando o catálogo…</p></div>
     </section>
@@ -79,29 +78,18 @@
     <!-- ========== VITRINE ========== -->
     <section id="aba-vitrine" role="tabpanel" aria-labelledby="tab-vitrine" hidden>
       <div class="vitrine">
+        <p class="dica">Escolha aqui o que aparece na página inicial: as promoções (no topo), os lançamentos e as seções que você criar.</p>
         <div class="cartao-form">
-          <h2 class="titulo-secao">Destaques</h2>
-          <p class="dica">Aparecem numa seção logo no começo da página inicial. O ideal é deixar até 8 produtos.</p>
-          <div class="vt-lista" id="vt-dest-lista"></div>
-          <p class="vt-info" id="vt-dest-info" aria-live="polite"></p>
-          <div class="vt-add">
-            <label class="sr-only" for="vt-dest-sel">Produto para destacar</label>
-            <select id="vt-dest-sel"></select>
-            <button class="btn btn--prim btn--peq" type="button" data-acao="add-destaque">Destacar</button>
-          </div>
-        </div>
-
-        <div class="cartao-form">
-          <h2 class="titulo-secao">Promoções</h2>
-          <p class="dica">Aparecem na seção “Promoções” com o preço antigo riscado e a porcentagem de desconto.</p>
+          <h2 class="titulo-secao">Promoções!</h2>
+          <p class="dica">É aqui que você escolhe o que fica em promoção. Os produtos aparecem na seção <strong>“Promoções!”</strong> no topo da página inicial, logo abaixo da faixa rolante, com o preço antigo riscado e a porcentagem de desconto.</p>
           <div class="vt-lista" id="vt-promo-lista"></div>
           <div class="vt-add vt-add--promo">
             <label class="sr-only" for="vt-promo-sel">Produto para colocar em promoção</label>
             <select id="vt-promo-sel"></select>
-            <div class="campo-reais"><i>R$</i><input id="vt-promo-preco" type="text" inputmode="decimal" autocomplete="off" placeholder="novo preço" aria-label="Preço promocional"></div>
+            <div class="campo-reais"><i>R$</i><input id="vt-promo-preco" type="text" inputmode="decimal" autocomplete="off" placeholder="preço ou 10%" aria-label="Preço promocional ou desconto em porcentagem"></div>
             <button class="btn btn--prim btn--peq" type="button" data-acao="add-promo">Promover</button>
           </div>
-          <p class="campo__ajuda" id="vt-promo-ajuda">Escolha o produto e digite o novo preço. O preço de hoje passa a aparecer riscado.</p>
+          <p class="campo__ajuda" id="vt-promo-ajuda">Escolha o produto e digite o novo preço (ex.: 149,90) ou o desconto (ex.: 10%). O preço de hoje passa a aparecer riscado.</p>
           <p class="aviso aviso--erro" id="vt-promo-erro" role="alert" hidden></p>
         </div>
 
@@ -113,6 +101,17 @@
             <label class="sr-only" for="vt-lanc-sel">Produto para marcar como lançamento</label>
             <select id="vt-lanc-sel"></select>
             <button class="btn btn--prim btn--peq" type="button" data-acao="add-lanc">Marcar</button>
+          </div>
+        </div>
+
+        <div class="cartao-form">
+          <h2 class="titulo-secao">Suas próprias seções</h2>
+          <p class="dica">Além das Promoções e dos Lançamentos, crie as seções que quiser (por exemplo “Mais vendidos”, “Kits”, “Para pele oleosa”) e escolha os produtos de cada uma. Elas aparecem na página inicial, logo abaixo das Promoções, na ordem em que estão aqui.</p>
+          <div id="vt-secoes"></div>
+          <div class="vt-add">
+            <label class="sr-only" for="vt-secao-nome">Nome da nova seção</label>
+            <input id="vt-secao-nome" type="text" maxlength="40" autocomplete="off" placeholder="Nome da nova seção (ex.: Mais vendidos)">
+            <button class="btn btn--prim btn--peq" type="button" data-acao="add-secao">Criar seção</button>
           </div>
         </div>
       </div>
@@ -253,9 +252,6 @@
           <label for="dp-selo">Etiqueta na foto <small>(opcional)</small></label>
           <input id="dp-selo" name="selo" type="text" autocomplete="off" maxlength="20" placeholder="Ex.: Lançamento">
           <p class="campo__ajuda">Em produtos em promoção, o site mostra a porcentagem de desconto no lugar da etiqueta.</p>
-        </div>
-        <div class="campo">
-          <label class="check" for="dp-destaque"><input id="dp-destaque" type="checkbox"> ★ Mostrar em “Destaques” na página inicial</label>
         </div>
 
         <details class="recolhe" id="dp-desc-det">
