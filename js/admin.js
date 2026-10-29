@@ -12,6 +12,7 @@
   const $$ = (seletor, raiz = document) => [...raiz.querySelectorAll(seletor)];
   const esc = (t) => String(t ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const brl = Core.moedaBR;
+  const foca = (el) => { if (!window.matchMedia('(pointer: coarse)').matches) el.focus(); };
   const norm = (t) => Core.semAcento(t || '').toLowerCase();
 
   const CHAVES = { token: 'cherry-admin:token', repo: 'cherry-admin:repo', rascunho: 'cherry-admin:rascunho' };
@@ -511,6 +512,10 @@
 
   $$('dialog [data-fecha]').forEach((b) => b.addEventListener('click', () => b.closest('dialog').close()));
   $('#dlg-publicar').addEventListener('cancel', (e) => { if (S.publicando) e.preventDefault(); });
+  ['#dlg-conectar', '#dlg-marca', '#dlg-publicar'].forEach((sel) => {
+    const d = $(sel);
+    d.addEventListener('click', (e) => { if (e.target === d && !S.publicando) d.close(); });
+  });
 
   /* ---------- Foto ---------- */
 
@@ -648,7 +653,7 @@
     $('#dp-foto-info').textContent = 'A foto é ajustada sozinha (quadrada, fundo branco e leve). Sem foto, o site mostra uma ilustração da embalagem.';
     previaFoto();
     dp.dlg.showModal();
-    if (!existente) dp.nome.focus();
+    if (!existente) foca(dp.nome);
   }
 
   $('#dp-foto').addEventListener('change', async (e) => {
@@ -1096,7 +1101,7 @@
     dm.erro.hidden = true;
     previaMarca();
     dm.dlg.showModal();
-    if (!m) dm.nome.focus();
+    if (!m) foca(dm.nome);
   }
 
   dm.form.addEventListener('submit', (e) => {
@@ -1263,7 +1268,7 @@
     dc.sair.hidden = !S.token;
     dc.ok.textContent = S.token ? 'Salvar' : 'Conectar';
     dc.dlg.showModal();
-    dc.token.focus();
+    foca(dc.token);
   }
 
   dc.form.addEventListener('submit', async (e) => {
@@ -1584,6 +1589,7 @@
       await carregar();
     } catch (err) {
       mostraFalhaGeral(err);
+      window.CherryAdminCarregou = true;
       return;
     }
     reindexa();
@@ -1591,6 +1597,7 @@
     desenhaLista();
     desenhaAvisos();
     mudou();
+    window.CherryAdminCarregou = true;
   }
 
   iniciar();

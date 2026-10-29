@@ -13,6 +13,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600;1,700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500&display=swap&text=%EC%A1%B0%EC%84%A0%EB%AF%B8%EB%85%80" rel="stylesheet">
   <link rel="stylesheet" href="css/admin.css">
+  <script>
+    // Se algo falhar ao carregar (navegador antigo, internet ruim…), mostra um aviso em vez de deixar a tela parada.
+    (function () {
+      var mostrou = false;
+      function aviso(msg) {
+        if (mostrou) return;
+        mostrou = true;
+        var d = document.createElement('div');
+        d.setAttribute('role', 'alert');
+        d.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;z-index:99999;padding:14px 16px;border-radius:14px;background:#4a0a16;color:#fff;font:600 14px/1.4 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.4)';
+        d.textContent = msg;
+        (document.body || document.documentElement).appendChild(d);
+      }
+      window.addEventListener('error', function (e) {
+        var onde = e.filename ? ' (' + String(e.filename).split('/').pop() + ':' + e.lineno + ')' : '';
+        aviso('Não consegui abrir o painel direito neste aparelho. Atualize a página. Se continuar, mande esta mensagem para o Gabriel: ' + (e.message || 'erro') + onde);
+      });
+      setTimeout(function () {
+        if (!window.CherryAdminCarregou) aviso('O painel está demorando para carregar. Se a tela continuar parada, atualize a página.');
+      }, 15000);
+    })();
+  </script>
 </head>
 <body>
 
