@@ -1182,6 +1182,48 @@ a.produto__midia { cursor: pointer; }
   html { scroll-behavior: auto; }
 }
 
+/* ---------- Desconto: seguir no Instagram ---------- */
+
+.insta { padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 56px) 0; }
+.insta[hidden] { display: none; }
+.insta__caixa {
+  display: grid; gap: 18px; justify-items: center; text-align: center;
+  max-width: 1320px; margin: 0 auto;
+  padding: clamp(26px, 4vw, 38px) clamp(20px, 4vw, 48px);
+  border-radius: 28px;
+  background: var(--branco);
+  box-shadow: 0 1px 0 rgba(122, 20, 38, .06), 0 24px 48px -34px rgba(74, 10, 22, .6);
+  outline: 2px dashed rgba(194, 64, 77, .45); outline-offset: -10px;
+}
+.insta__selo {
+  display: grid; place-content: center; justify-items: center;
+  width: 92px; height: 92px; margin: 0;
+  border-radius: 50%;
+  background: var(--coral); color: var(--branco);
+  box-shadow: 0 14px 26px -14px rgba(194, 64, 77, .9);
+  line-height: 1;
+}
+.insta__selo strong { font-family: var(--serif); font-size: 2.1rem; font-weight: 700; font-variant-numeric: lining-nums; }
+.insta__selo small { margin-top: 2px; padding-left: .26em; font-size: .6rem; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; }
+.insta__titulo {
+  margin: 0;
+  font-family: var(--serif); font-weight: 600;
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.3rem); line-height: 1.1;
+  color: var(--cereja);
+  font-variant-numeric: lining-nums;
+}
+.insta__titulo span { color: var(--coral-escuro); }
+.insta__perfis { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.btn--insta { gap: .6rem; font-size: .92rem; letter-spacing: .02em; text-transform: none; }
+.btn--insta svg {
+  width: 20px; height: 20px; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.btn--insta svg circle:last-child { fill: currentColor; stroke: none; }
+@media (min-width: 900px) {
+  .insta__caixa { grid-template-columns: auto minmax(0, 1fr) auto; justify-items: start; text-align: left; gap: 30px; }
+}
+
 /* ---------- Consultar no WhatsApp ---------- */
 
 .btn--whats {

@@ -12,7 +12,8 @@ O que ela faz:
 - Preços direto na lista (normal, atacado, preço antigo para promoções).
 - Criar, editar e excluir produtos, com foto (convertida para WebP quadrado de até 800 px) e descrição completa.
 - Criar, editar e excluir marcas.
-- Regras: peças para o atacado, valor do Atacado Express e WhatsApp.
+- **Vitrine:** escolher os produtos em **Destaques** (seção no começo da página inicial, campo `destaque: true` no produto), colocar produtos em **Promoções** (digita o novo preço e o preço de hoje vira o "antigo" riscado) e marcar **Lançamentos** (etiqueta `selo: 'Lançamento'`). Também dá para marcar destaque pela estrela na lista de produtos.
+- Regras: peças para o atacado, valor do Atacado Express, WhatsApp e o **desconto por seguir no Instagram** (`descontoSeguir` e `perfisInstagram` em `CHERRY_CONFIG`; 0% esconde o aviso da página inicial).
 - Nada vai para o ar até clicar em **Publicar**. As edições ficam guardadas no aparelho (rascunho).
 - **Publicar** faz um único commit no GitHub (`js/produtos.js`, `js/descricoes.js` e as fotos) e o workflow de Pages atualiza o site em 1 a 2 minutos.
 - Antes de commitar, o painel relê o que está no repositório e reaplica só as alterações feitas nele, então mudanças feitas por outra pessoa no meio tempo não são perdidas.

@@ -187,7 +187,7 @@
       return m && m[1] === p.id ? `imagem: FOTO(${aspas(p.id)})` : `${chave(k)}: ${valorInline(p[k])}`;
     };
     const l1 = ['id', 'marca', 'categoria'].filter(tem).map(par);
-    const l2 = ['nome', 'tipo', 'selo'].filter(tem).map(par);
+    const l2 = ['nome', 'tipo', 'selo', 'destaque'].filter(tem).map(par);
     const l3 = ['preco', 'preco30', 'precoAntigo', 'imagem'].filter(tem).map(par);
     const l4 = ['arte'].filter(tem).map(par);
     const resto = Object.keys(p).filter((k) => !usados.has(k) && tem(k)).map(par);
@@ -449,13 +449,29 @@
     if (!Number.isInteger(c.pecasFaixa2) || c.pecasFaixa2 < 2) erros.push({ texto: 'O atacado precisa começar em 2 peças ou mais.' });
     if (typeof c.expressMinimo !== 'number' || !(c.expressMinimo >= 0)) erros.push({ texto: 'O valor do Atacado Express é inválido.' });
     if (!/^\d{12,13}$/.test(String(c.whatsapp || ''))) erros.push({ texto: 'O WhatsApp precisa ter DDI + DDD + número (ex.: 5562999998888).' });
+    if (c.descontoSeguir !== undefined) {
+      if (!Number.isInteger(c.descontoSeguir) || c.descontoSeguir < 0 || c.descontoSeguir > 100) erros.push({ texto: 'O desconto por seguir no Instagram precisa estar entre 0% e 100%.' });
+      const perfis = Array.isArray(c.perfisInstagram) ? c.perfisInstagram : [];
+      if (c.descontoSeguir > 0 && !perfis.length) erros.push({ texto: 'Informe ao menos um perfil do Instagram para o desconto (ou coloque 0% para esconder o aviso).' });
+      if (perfis.some((p) => !/^[A-Za-z0-9._]{1,30}$/.test(p))) erros.push({ texto: 'Há um perfil do Instagram com nome inválido (use só letras, números, ponto e sublinhado).' });
+    }
     return { erros, avisos };
+  }
+
+  // "@abiacamps, https://www.instagram.com/cherrykbeauty_/" → ['abiacamps', 'cherrykbeauty_']
+  function lerPerfis(texto) {
+    const lista = [];
+    for (const parte of String(texto || '').split(/[\s,;]+/)) {
+      const p = parte.replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/[/?#].*$/, '').replace(/^@+/, '');
+      if (p && !lista.some((x) => x.toLowerCase() === p.toLowerCase())) lista.push(p);
+    }
+    return lista;
   }
 
   const api = {
     clonar, iguais, semAcento, slug, idUnico, lerReais, formatarReais, moedaBR,
     avaliar, calcularCambios, idsTocados, totalCambios, aplicarCambios, gerarTextos, validar,
-    listaParaTexto, textoParaLista, paragrafosParaTexto, textoParaParagrafos, ativosParaTexto, textoParaAtivos, montarDescricao,
+    listaParaTexto, textoParaLista, paragrafosParaTexto, textoParaParagrafos, ativosParaTexto, textoParaAtivos, montarDescricao, lerPerfis,
     _interno: { blocoProduto, blocoDescricao, linhaMarca, remendaProdutos, remendaDescricoes, regeneraProdutos, regeneraDescricoes, valorInline },
   };
   raiz.CherryAdminCore = api;

@@ -32,6 +32,17 @@
   $$('[data-faixa1-max]').forEach((el) => { el.textContent = pecasFaixa2 - 1; });
   $$('[data-express-minimo]').forEach((el) => { el.textContent = moeda(expressMinimo); });
 
+  // aviso "siga no Instagram e ganhe desconto" (some se o desconto for 0 ou se não houver perfis)
+  const ICONE_INSTA = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".9"/></svg>';
+  const blocoInsta = $('#desconto');
+  if (blocoInsta && window.CHERRY_CONFIG.descontoSeguir !== undefined) {
+    const desconto = Number(window.CHERRY_CONFIG.descontoSeguir) || 0;
+    const perfis = (window.CHERRY_CONFIG.perfisInstagram || []).filter(Boolean);
+    blocoInsta.hidden = !(desconto > 0 && perfis.length);
+    $$('[data-desconto-seguir]').forEach((el) => { el.textContent = `${desconto}%`; });
+    $('#insta-perfis').innerHTML = perfis.map((u) => `<li><a class="btn btn--primario btn--insta" href="https://www.instagram.com/${encodeURIComponent(u)}/" target="_blank" rel="noopener">${ICONE_INSTA}@${esc(u)}</a></li>`).join('');
+  }
+
   // botão "Atacado Express": abre o WhatsApp com a mensagem pronta
   if (whatsapp) {
     $$('[data-whatsapp]').forEach((el) => {
@@ -444,6 +455,11 @@
   const promocoes = PRODUTOS.filter((p) => temPreco(p) && p.precoAntigo);
   $('#grade-promocoes').innerHTML = promocoes.map(cartao).join('');
   $('#promocoes').closest('.faixa-branca').hidden = !promocoes.length;
+
+  // destaques: produtos marcados com destaque: true (escolhidos no painel)
+  const destaques = PRODUTOS.filter((p) => p.destaque);
+  $('#grade-destaques').innerHTML = destaques.map(cartao).join('');
+  $('#destaques').hidden = !destaques.length;
 
   // busca: nome, marca, tipo e ativos pesam mais; resumo e benefícios entram como complemento
   const indice = Object.fromEntries(PRODUTOS.map((p) => {

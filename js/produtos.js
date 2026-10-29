@@ -26,6 +26,10 @@ window.CHERRY_CONFIG = {
   expressMinimo: 2300,
   // Mensagem que já vem escrita quando o cliente toca no botão "Atacado Express" do início da página
   mensagemConsulta: 'Olá! Gostaria de saber como funciona o Atacado Express da Cherry Kbeuty (compras a partir de R$ 2.300).',
+  // Desconto para quem seguir os perfis do Instagram abaixo (0 = esconde o aviso da página inicial)
+  descontoSeguir: 10,
+  // Perfis do Instagram a seguir: só o nome de usuário, sem o @
+  perfisInstagram: ['abiacamps', 'cherrykbeauty_'],
 };
 
 window.CHERRY_MARCAS = [

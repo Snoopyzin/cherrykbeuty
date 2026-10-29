@@ -37,6 +37,7 @@
 
     <div class="abas" role="tablist" aria-label="Seções do painel">
       <button class="aba" type="button" role="tab" id="tab-produtos" aria-controls="aba-produtos" aria-selected="true" data-aba="produtos">Produtos</button>
+      <button class="aba" type="button" role="tab" id="tab-vitrine" aria-controls="aba-vitrine" aria-selected="false" data-aba="vitrine" tabindex="-1">Vitrine</button>
       <button class="aba" type="button" role="tab" id="tab-marcas" aria-controls="aba-marcas" aria-selected="false" data-aba="marcas" tabindex="-1">Marcas</button>
       <button class="aba" type="button" role="tab" id="tab-config" aria-controls="aba-config" aria-selected="false" data-aba="config" tabindex="-1">Regras<span class="aba__extra"> e contato</span></button>
     </div>
@@ -53,6 +54,16 @@
           <span class="sr-only">Filtrar por marca</span>
           <select id="f-marca"></select>
         </label>
+        <label class="seletor">
+          <span class="sr-only">Mostrar</span>
+          <select id="f-mostrar">
+            <option value="">Mostrar: todos</option>
+            <option value="destaque">Só os destaques</option>
+            <option value="promo">Só as promoções</option>
+            <option value="sem-preco">Só os sem preço</option>
+            <option value="mudou">Só os alterados</option>
+          </select>
+        </label>
         <div class="chips" role="group" aria-label="Categoria">
           <button class="chip" type="button" data-cat="todos" aria-pressed="true">Todos</button>
           <button class="chip" type="button" data-cat="skincare" aria-pressed="false">Skincare</button>
@@ -60,9 +71,51 @@
         </div>
         <button class="btn btn--prim" id="btn-novo-produto" type="button">+ Novo produto</button>
       </div>
-      <p class="dica">Mude os preços direto na lista, é só digitar. Para trocar foto, nome ou descrição, toque em <strong>Editar tudo</strong>. Nada vai para o site até você tocar em <strong>Publicar</strong>.</p>
+      <p class="dica">Mude os preços direto na lista, é só digitar. Toque em <strong>★ Destaque</strong> para o produto aparecer na página inicial. Para trocar foto, nome ou descrição, toque em <strong>Editar tudo</strong>. Promoções e lançamentos ficam mais fáceis na aba <strong>Vitrine</strong>. Nada vai para o site até você tocar em <strong>Publicar</strong>.</p>
       <p class="contagem" id="lista-contagem" aria-live="polite"></p>
       <div class="lista" id="lista-produtos"><p class="carregando">Carregando o catálogo…</p></div>
+    </section>
+
+    <!-- ========== VITRINE ========== -->
+    <section id="aba-vitrine" role="tabpanel" aria-labelledby="tab-vitrine" hidden>
+      <div class="vitrine">
+        <div class="cartao-form">
+          <h2 class="titulo-secao">Destaques</h2>
+          <p class="dica">Aparecem numa seção logo no começo da página inicial. O ideal é deixar até 8 produtos.</p>
+          <div class="vt-lista" id="vt-dest-lista"></div>
+          <p class="vt-info" id="vt-dest-info" aria-live="polite"></p>
+          <div class="vt-add">
+            <label class="sr-only" for="vt-dest-sel">Produto para destacar</label>
+            <select id="vt-dest-sel"></select>
+            <button class="btn btn--prim btn--peq" type="button" data-acao="add-destaque">Destacar</button>
+          </div>
+        </div>
+
+        <div class="cartao-form">
+          <h2 class="titulo-secao">Promoções</h2>
+          <p class="dica">Aparecem na seção “Promoções” com o preço antigo riscado e a porcentagem de desconto.</p>
+          <div class="vt-lista" id="vt-promo-lista"></div>
+          <div class="vt-add vt-add--promo">
+            <label class="sr-only" for="vt-promo-sel">Produto para colocar em promoção</label>
+            <select id="vt-promo-sel"></select>
+            <div class="campo-reais"><i>R$</i><input id="vt-promo-preco" type="text" inputmode="decimal" autocomplete="off" placeholder="novo preço" aria-label="Preço promocional"></div>
+            <button class="btn btn--prim btn--peq" type="button" data-acao="add-promo">Promover</button>
+          </div>
+          <p class="campo__ajuda" id="vt-promo-ajuda">Escolha o produto e digite o novo preço. O preço de hoje passa a aparecer riscado.</p>
+          <p class="aviso aviso--erro" id="vt-promo-erro" role="alert" hidden></p>
+        </div>
+
+        <div class="cartao-form">
+          <h2 class="titulo-secao">Lançamentos</h2>
+          <p class="dica">Ganham a etiqueta “Lançamento” na foto. Produtos em promoção mostram a porcentagem de desconto no lugar da etiqueta.</p>
+          <div class="vt-lista" id="vt-lanc-lista"></div>
+          <div class="vt-add">
+            <label class="sr-only" for="vt-lanc-sel">Produto para marcar como lançamento</label>
+            <select id="vt-lanc-sel"></select>
+            <button class="btn btn--prim btn--peq" type="button" data-acao="add-lanc">Marcar</button>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ========== MARCAS ========== -->
@@ -87,6 +140,18 @@
           <label for="cfg-express">Atacado Express a partir de quanto?</label>
           <div class="campo-reais"><i>R$</i><input id="cfg-express" type="text" inputmode="decimal" autocomplete="off"></div>
           <p class="campo__ajuda">Valor do pedido a partir do qual vale a entrega em até 3 dias úteis. Atualiza todos os textos do site.</p>
+        </div>
+
+        <h2 class="titulo-secao">Desconto no Instagram</h2>
+        <div class="campo">
+          <label for="cfg-desc-seguir">Desconto para quem seguir os perfis</label>
+          <div class="campo-sufixo"><input id="cfg-desc-seguir" type="number" inputmode="numeric" min="0" max="100" step="1"><span>%</span></div>
+          <p class="campo__ajuda">Aparece num aviso logo no começo da página inicial. Coloque <strong>0</strong> para esconder o aviso.</p>
+        </div>
+        <div class="campo">
+          <label for="cfg-perfis">Perfis que precisam ser seguidos</label>
+          <input id="cfg-perfis" type="text" autocomplete="off" spellcheck="false" placeholder="@abiacamps, @cherrykbeauty_">
+          <p class="campo__ajuda" id="cfg-perfis-ajuda"></p>
         </div>
 
         <h2 class="titulo-secao">WhatsApp</h2>
@@ -188,6 +253,9 @@
           <label for="dp-selo">Etiqueta na foto <small>(opcional)</small></label>
           <input id="dp-selo" name="selo" type="text" autocomplete="off" maxlength="20" placeholder="Ex.: Lançamento">
           <p class="campo__ajuda">Em produtos em promoção, o site mostra a porcentagem de desconto no lugar da etiqueta.</p>
+        </div>
+        <div class="campo">
+          <label class="check" for="dp-destaque"><input id="dp-destaque" type="checkbox"> ★ Mostrar em “Destaques” na página inicial</label>
         </div>
 
         <details class="recolhe" id="dp-desc-det">

@@ -24,7 +24,7 @@
   const FORMAS = [['pote', 'Pote'], ['bisnaga', 'Bisnaga / tubo'], ['spray', 'Spray'], ['conta-gotas', 'Conta-gotas'], ['frasco', 'Frasco'], ['pump', 'Frasco com bomba'], ['caneta', 'Caneta'], ['caixa', 'Caixa / ampolas']];
   const ESTILOS = [['sans', 'Moderna em negrito'], ['sans-leve', 'Moderna leve'], ['espacado', 'Letras espaçadas'], ['script', 'Cursiva'], ['serif', 'Elegante com serifa'], ['coreano', 'Coreano']];
   const ARTE_PADRAO = { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' };
-  const ROTULOS = { preco: 'Preço', preco30: 'Atacado', precoAntigo: 'Preço antigo', nome: 'Nome', tipo: 'Texto curto', marca: 'Marca', categoria: 'Categoria', selo: 'Etiqueta', imagem: 'Foto', arte: 'Ilustração' };
+  const ROTULOS = { preco: 'Preço', preco30: 'Atacado', precoAntigo: 'Preço antigo', nome: 'Nome', tipo: 'Texto curto', marca: 'Marca', categoria: 'Categoria', selo: 'Etiqueta', imagem: 'Foto', arte: 'Ilustração', destaque: 'Destaque' };
 
   const S = {
     original: null,            // como está no site
@@ -32,7 +32,7 @@
     origPorId: new Map(),
     fotos: new Map(),          // caminho → { dataUrl, ext }  (esperando publicar)
     publicadas: new Map(),     // caminho → dataUrl           (só para a prévia nesta visita)
-    filtro: { busca: '', marca: '', cat: 'todos' },
+    filtro: { busca: '', marca: '', cat: 'todos', mostrar: '' },
     token: null, repo: null,
     cambios: null, total: 0,
     publicando: false,
@@ -267,6 +267,7 @@
         <p class="item__marca">${esc(m ? m.nome : p.marca)}</p>
         <h3 class="item__nome">${esc(p.nome)}</h3>
         <div class="etiquetas">${etiquetas(p)}</div>
+        <button class="estrela" type="button" data-acao="destaque" aria-pressed="${p.destaque ? 'true' : 'false'}">Destaque</button>
       </div>
       <div class="item__precos">
         ${campoPreco(p, 'preco', 'Normal', 'em breve')}
@@ -286,6 +287,11 @@
     return S.atual.produtos.filter((p) => {
       if (S.filtro.cat !== 'todos' && p.categoria !== S.filtro.cat) return false;
       if (S.filtro.marca && p.marca !== S.filtro.marca) return false;
+      const mostrar = S.filtro.mostrar;
+      if (mostrar === 'destaque' && !p.destaque) return false;
+      if (mostrar === 'promo' && !ehPromo(p)) return false;
+      if (mostrar === 'sem-preco' && temPreco(p)) return false;
+      if (mostrar === 'mudou' && !estadoLinha(p)) return false;
       if (!termos.length) return true;
       const m = marcaDe(p.marca);
       const alvo = norm(`${m ? m.nome : ''} ${p.nome} ${p.tipo || ''}`);
@@ -359,6 +365,14 @@
     const id = b.closest('.item').dataset.id;
     if (b.dataset.acao === 'editar') abreProduto(id);
     if (b.dataset.acao === 'desfazer') desfazProduto(id);
+    if (b.dataset.acao === 'destaque') {
+      const p = produto(id);
+      if (p.destaque) delete p.destaque; else p.destaque = true;
+      b.setAttribute('aria-pressed', p.destaque ? 'true' : 'false');
+      atualizaLinha(id);
+      mudou();
+      if (S.filtro.mostrar === 'destaque' && !p.destaque) desenhaLista();
+    }
   });
 
   // foto que não carregou: mostra o aviso em vez do ícone quebrado
@@ -388,6 +402,7 @@
 
   $('#f-busca').addEventListener('input', (e) => { S.filtro.busca = e.target.value; desenhaLista(); });
   $('#f-marca').addEventListener('change', (e) => { S.filtro.marca = e.target.value; desenhaLista(); });
+  $('#f-mostrar').addEventListener('change', (e) => { S.filtro.mostrar = e.target.value; desenhaLista(); });
   $$('.chips [data-cat]').forEach((b) => b.addEventListener('click', () => {
     S.filtro.cat = b.dataset.cat;
     $$('.chips [data-cat]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
@@ -404,6 +419,7 @@
       $(`#aba-${b.dataset.aba}`).hidden = !ativa;
     });
     if (nome === 'produtos') desenhaLista();
+    if (nome === 'vitrine') desenhaVitrine();
     if (nome === 'marcas') desenhaMarcas();
     if (nome === 'config') desenhaConfig();
   }
@@ -465,7 +481,7 @@
 
   const dp = {
     dlg: $('#dlg-produto'), form: $('#form-produto'),
-    nome: $('#dp-nome'), tipo: $('#dp-tipo'), marca: $('#dp-marca'), categoria: $('#dp-categoria'), selo: $('#dp-selo'),
+    nome: $('#dp-nome'), tipo: $('#dp-tipo'), marca: $('#dp-marca'), categoria: $('#dp-categoria'), selo: $('#dp-selo'), destaque: $('#dp-destaque'),
     preco: $('#dp-preco'), preco30: $('#dp-preco30'), antigo: $('#dp-antigo'),
     resumo: $('#dp-resumo'), serve: $('#dp-serve'), beneficios: $('#dp-beneficios'), ativos: $('#dp-ativos'), rotina: $('#dp-rotina'), importante: $('#dp-importante'),
     forma: $('#dp-forma'), corpo: $('#dp-cor-corpo'), tampa: $('#dp-cor-tampa'), texto: $('#dp-cor-texto'),
@@ -496,6 +512,7 @@
     dp.marca.value = p.marca;
     dp.categoria.value = p.categoria;
     dp.selo.value = p.selo || '';
+    dp.destaque.checked = !!p.destaque;
     dp.preco.value = Core.formatarReais(p.preco);
     dp.preco30.value = Core.formatarReais(p.preco30);
     dp.antigo.value = Core.formatarReais(p.precoAntigo);
@@ -570,6 +587,7 @@
     p.categoria = dp.categoria.value;
     const selo = dp.selo.value.trim();
     if (selo) p.selo = selo; else delete p.selo;
+    if (dp.destaque.checked) p.destaque = true; else delete p.destaque;
     p.preco = preco;
     if (preco30 === null) delete p.preco30; else p.preco30 = preco30;
     if (antigo === null) delete p.precoAntigo; else p.precoAntigo = antigo;
@@ -601,8 +619,9 @@
 
     dp.dlg.close();
     if (ed.novo) {
-      S.filtro = { busca: '', marca: '', cat: 'todos' };
+      S.filtro = { busca: '', marca: '', cat: 'todos', mostrar: '' };
       $('#f-busca').value = '';
+      $('#f-mostrar').value = '';
       desenhaFiltroMarcas();
       $$('.chips [data-cat]').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.cat === 'todos')));
     }
@@ -638,6 +657,172 @@
   });
 
   $('#btn-novo-produto').addEventListener('click', () => abreProduto(null));
+
+  /* ---------- Vitrine: destaques, promoções e lançamentos ---------- */
+
+  const MAX_DESTAQUES = 8;
+  const LANCAMENTO = 'Lançamento';
+  const ehLancamento = (p) => norm(p.selo) === 'lancamento';
+  const precoTexto = (p) => (temPreco(p) ? brl(p.preco) : 'sem preço ainda');
+  const pctTexto = (p) => (ehPromo(p) ? `-${Math.round((1 - p.preco / p.precoAntigo) * 100)}%` : '?');
+
+  // produtos agrupados por marca, para os seletores
+  function opcoesProdutos(itens, comPreco) {
+    const grupos = new Map();
+    for (const p of itens) {
+      const m = marcaDe(p.marca);
+      const nome = m ? m.nome : p.marca;
+      if (!grupos.has(nome)) grupos.set(nome, []);
+      grupos.get(nome).push(p);
+    }
+    return [...grupos.keys()].sort((a, b) => a.localeCompare(b, 'pt-BR')).map((nome) => `<optgroup label="${esc(nome)}">${
+      grupos.get(nome).map((p) => `<option value="${esc(p.id)}">${esc(p.nome)}${comPreco && temPreco(p) ? ` (${brl(p.preco)})` : ''}</option>`).join('')
+    }</optgroup>`).join('');
+  }
+
+  function linhaVitrine(p, { acao, rotulo, extra = '', depois = '' }) {
+    const m = marcaDe(p.marca);
+    return `<div class="vt-row" data-id="${esc(p.id)}">
+      <div class="item__foto">${miniatura(p)}</div>
+      <div class="vt-row__texto">
+        <p class="item__marca">${esc(m ? m.nome : p.marca)}</p>
+        <p class="vt-row__nome">${esc(p.nome)}</p>
+        ${extra}
+      </div>
+      <button class="link" type="button" data-acao="${acao}">${rotulo}</button>
+      ${depois}
+    </div>`;
+  }
+
+  function linhaPromo(p) {
+    const campo = (c, rotulo) => `<div class="campo">
+        <label for="vp-${c}-${esc(p.id)}">${rotulo}</label>
+        <div class="campo-reais"><i>R$</i><input id="vp-${c}-${esc(p.id)}" type="text" inputmode="decimal" autocomplete="off" data-campo="${c}" value="${esc(Core.formatarReais(p[c]))}"></div>
+      </div>`;
+    return linhaVitrine(p, {
+      acao: 'encerrar-promo',
+      rotulo: 'Encerrar',
+      depois: `<div class="vt-precos">${campo('precoAntigo', 'De (antigo)')}${campo('preco', 'Por (atual)')}<span class="etq etq--promo vt-pct">${pctTexto(p)}</span></div>
+        <p class="item__aviso">${esc(avisoLinha(p))}</p>`,
+    });
+  }
+
+  function ajudaPromo() {
+    const p = produto($('#vt-promo-sel').value);
+    $('#vt-promo-ajuda').textContent = p
+      ? `Preço de hoje: ${brl(p.preco)}. Digite o novo preço (menor que esse); o preço de hoje passa a aparecer riscado.`
+      : 'Escolha o produto e digite o novo preço. O preço de hoje passa a aparecer riscado.';
+  }
+
+  function desenhaVitrine() {
+    const prods = S.atual.produtos;
+    const vazio = (t) => `<p class="vt-vazio">${t}</p>`;
+    const escolha = '<option value="">Escolha um produto…</option>';
+
+    const dest = prods.filter((p) => p.destaque);
+    $('#vt-dest-lista').innerHTML = dest.length
+      ? dest.map((p) => linhaVitrine(p, { acao: 'tirar-destaque', rotulo: 'Tirar', extra: `<p class="vt-row__extra">${esc(precoTexto(p))}</p>` })).join('')
+      : vazio('Nenhum produto em destaque ainda.');
+    $('#vt-dest-sel').innerHTML = escolha + opcoesProdutos(prods.filter((p) => !p.destaque), false);
+    $('#vt-dest-info').textContent = dest.length > MAX_DESTAQUES ? `${dest.length} produtos em destaque. Muitos destaques perdem o efeito: o ideal é até ${MAX_DESTAQUES}.` : '';
+
+    const promos = prods.filter((p) => typeof p.precoAntigo === 'number');
+    $('#vt-promo-lista').innerHTML = promos.length ? promos.map(linhaPromo).join('') : vazio('Nenhum produto em promoção.');
+    $('#vt-promo-sel').innerHTML = escolha + opcoesProdutos(prods.filter((p) => temPreco(p) && typeof p.precoAntigo !== 'number'), true);
+    $('#vt-promo-erro').hidden = true;
+    ajudaPromo();
+
+    const lanc = prods.filter(ehLancamento);
+    $('#vt-lanc-lista').innerHTML = lanc.length
+      ? lanc.map((p) => linhaVitrine(p, { acao: 'tirar-lanc', rotulo: 'Tirar', extra: `<p class="vt-row__extra">${esc(precoTexto(p))}</p>` })).join('')
+      : vazio('Nenhum lançamento marcado.');
+    $('#vt-lanc-sel').innerHTML = escolha + opcoesProdutos(prods.filter((p) => !ehLancamento(p)), false);
+  }
+
+  function adicionaPromo() {
+    const p = produto($('#vt-promo-sel').value);
+    const novo = Core.lerReais($('#vt-promo-preco').value);
+    const falha = (msg) => mostraErro($('#vt-promo-erro'), msg);
+    if (!p) return falha('Escolha o produto que vai entrar em promoção.');
+    if (novo === null || Number.isNaN(novo) || novo <= 0) return falha('Digite o preço promocional (um valor maior que zero).');
+    if (novo >= p.preco) return falha(`O preço promocional precisa ser menor que o preço de hoje (${brl(p.preco)}).`);
+    p.precoAntigo = p.preco;
+    p.preco = novo;
+    $('#vt-promo-preco').value = '';
+    desenhaVitrine();
+    mudou();
+    mostraToast(typeof p.preco30 === 'number' && p.preco30 > novo
+      ? `Em promoção. Atenção: o atacado (${brl(p.preco30)}) ficou maior que o preço promocional; ajuste na aba Produtos.`
+      : `“${p.nome}” entrou em promoção (${pctTexto(p)}).`);
+  }
+
+  const vitrine = $('#aba-vitrine');
+
+  vitrine.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-acao]');
+    if (!b) return;
+    const linha = b.closest('.vt-row');
+    const p = linha ? produto(linha.dataset.id) : null;
+    const escolhido = (sel) => produto($(sel).value);
+    switch (b.dataset.acao) {
+      case 'tirar-destaque': delete p.destaque; break;
+      case 'add-destaque': {
+        const alvo = escolhido('#vt-dest-sel');
+        if (!alvo) { mostraToast('Escolha um produto na lista.'); return; }
+        alvo.destaque = true;
+        break;
+      }
+      case 'tirar-lanc': delete p.selo; break;
+      case 'add-lanc': {
+        const alvo = escolhido('#vt-lanc-sel');
+        if (!alvo) { mostraToast('Escolha um produto na lista.'); return; }
+        alvo.selo = LANCAMENTO;
+        break;
+      }
+      case 'add-promo': adicionaPromo(); return;
+      case 'encerrar-promo': {
+        const antes = { preco: p.preco, precoAntigo: p.precoAntigo };
+        if (p.precoAntigo > p.preco) p.preco = p.precoAntigo;
+        delete p.precoAntigo;
+        desenhaVitrine();
+        mudou();
+        mostraToast(`Promoção de “${p.nome}” encerrada. O preço voltou para ${brl(p.preco)}.`, {
+          texto: 'Desfazer',
+          fn: () => { p.preco = antes.preco; p.precoAntigo = antes.precoAntigo; desenhaVitrine(); mudou(); },
+        });
+        return;
+      }
+      default: return;
+    }
+    desenhaVitrine();
+    mudou();
+  });
+
+  $('#vt-promo-sel').addEventListener('change', () => { ajudaPromo(); $('#vt-promo-erro').hidden = true; });
+  $('#vt-promo-preco').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); adicionaPromo(); } });
+
+  // preços das promoções já cadastradas: edita no lugar, sem redesenhar a lista
+  $('#vt-promo-lista').addEventListener('input', (e) => {
+    const campo = e.target.dataset.campo;
+    if (!campo) return;
+    const linha = e.target.closest('.vt-row');
+    const p = produto(linha.dataset.id);
+    const n = Core.lerReais(e.target.value);
+    if (n === null || Number.isNaN(n)) { e.target.setAttribute('aria-invalid', 'true'); return; }
+    e.target.removeAttribute('aria-invalid');
+    p[campo] = n;
+    $('.vt-pct', linha).textContent = pctTexto(p);
+    $('.item__aviso', linha).textContent = avisoLinha(p);
+    mudou();
+  });
+  $('#vt-promo-lista').addEventListener('change', (e) => {
+    const campo = e.target.dataset.campo;
+    if (!campo) return;
+    const p = produto(e.target.closest('.vt-row').dataset.id);
+    if (e.target.getAttribute('aria-invalid') === 'true') mostraToast('Esse valor não é um preço. Voltei para o que estava antes.');
+    e.target.removeAttribute('aria-invalid');
+    e.target.value = Core.formatarReais(p[campo]);
+  });
 
   /* ---------- Marcas ---------- */
 
@@ -731,7 +916,9 @@
 
   /* ---------- Regras e contato ---------- */
 
-  const cfg = { faixa2: $('#cfg-faixa2'), express: $('#cfg-express'), whats: $('#cfg-whats'), msg: $('#cfg-msg'), zapAjuda: $('#cfg-whats-ajuda') };
+  const cfg = { faixa2: $('#cfg-faixa2'), express: $('#cfg-express'), whats: $('#cfg-whats'), msg: $('#cfg-msg'), zapAjuda: $('#cfg-whats-ajuda'),
+    descSeguir: $('#cfg-desc-seguir'), perfis: $('#cfg-perfis'), perfisAjuda: $('#cfg-perfis-ajuda') };
+  const textoPerfis = (lista = []) => lista.map((u) => `@${u}`).join(', ');
 
   function formataZap(d) {
     d = String(d || '');
@@ -754,6 +941,22 @@
     cfg.whats.value = formataZap(c.whatsapp);
     cfg.msg.value = c.mensagemConsulta || '';
     ajudaZap();
+    cfg.descSeguir.value = c.descontoSeguir ?? 0;
+    cfg.perfis.value = textoPerfis(c.perfisInstagram);
+    ajudaPerfis();
+  }
+
+  function ajudaPerfis() {
+    const c = S.atual.config;
+    const perfis = c.perfisInstagram || [];
+    const invalido = perfis.some((u) => !/^[A-Za-z0-9._]{1,30}$/.test(u));
+    let msg;
+    if (invalido) msg = 'Há um perfil com nome inválido. Use só letras, números, ponto e sublinhado.';
+    else if (!(c.descontoSeguir > 0)) msg = 'Com 0%, o aviso fica escondido na página inicial.';
+    else if (!perfis.length) msg = 'Digite ao menos um perfil, separando por vírgula (ex.: @abiacamps, @cherrykbeauty_).';
+    else msg = `O aviso mostra um botão para: ${perfis.map((u) => `instagram.com/${u}`).join(' e ')}.`;
+    cfg.perfisAjuda.textContent = msg;
+    cfg.perfisAjuda.style.color = invalido || (c.descontoSeguir > 0 && !perfis.length) ? 'var(--erro)' : '';
   }
 
   cfg.faixa2.addEventListener('input', () => {
@@ -794,6 +997,24 @@
   });
   cfg.whats.addEventListener('change', () => { cfg.whats.value = formataZap(S.atual.config.whatsapp); });
   cfg.msg.addEventListener('input', () => { S.atual.config.mensagemConsulta = cfg.msg.value; mudou(); });
+
+  cfg.descSeguir.addEventListener('input', () => {
+    const n = parseInt(cfg.descSeguir.value, 10);
+    const ok = Number.isInteger(n) && n >= 0 && n <= 100;
+    cfg.descSeguir.setAttribute('aria-invalid', String(!ok));
+    if (ok) { S.atual.config.descontoSeguir = n; ajudaPerfis(); mudou(); }
+  });
+  cfg.descSeguir.addEventListener('change', () => {
+    cfg.descSeguir.removeAttribute('aria-invalid');
+    cfg.descSeguir.value = S.atual.config.descontoSeguir ?? 0;
+  });
+  cfg.perfis.addEventListener('input', () => {
+    S.atual.config.perfisInstagram = Core.lerPerfis(cfg.perfis.value);
+    if (S.atual.config.descontoSeguir === undefined) S.atual.config.descontoSeguir = 0;
+    ajudaPerfis();
+    mudou();
+  });
+  cfg.perfis.addEventListener('change', () => { cfg.perfis.value = textoPerfis(S.atual.config.perfisInstagram); });
 
   /* ---------- Conexão com o GitHub ---------- */
 
@@ -866,6 +1087,7 @@
     return p ? p.nome : id;
   };
   const fmtValor = (k, v) => {
+    if (k === 'destaque') return v ? 'sim' : 'não';
     if (v === undefined || v === null || v === '') return 'vazio';
     if (typeof v === 'number') return brl(v);
     if (k === 'imagem') return 'foto';
@@ -894,10 +1116,20 @@
     for (const m of c.marcas.adicionados) itens.push({ titulo: `Marca nova: ${m.nome}`, detalhe: '' });
     for (const id of Object.keys(c.marcas.alterados)) itens.push({ titulo: `Marca alterada: ${(marcaDe(id) || {}).nome || id}`, detalhe: '' });
     for (const id of c.marcas.removidos) itens.push({ titulo: `Marca excluída: ${id}`, detalhe: '' });
-    const rotuloCfg = { pecasFaixa2: 'Atacado a partir de', expressMinimo: 'Atacado Express a partir de', whatsapp: 'WhatsApp', mensagemConsulta: 'Mensagem do botão Express' };
+    const rotuloCfg = {
+      pecasFaixa2: 'Atacado a partir de', expressMinimo: 'Atacado Express a partir de', whatsapp: 'WhatsApp', mensagemConsulta: 'Mensagem do botão Express',
+      descontoSeguir: 'Desconto por seguir no Instagram', perfisInstagram: 'Perfis do Instagram',
+    };
     for (const [k, v] of Object.entries(c.config)) {
       const antes = S.original.config[k];
-      const fmt = (x) => (k === 'expressMinimo' ? brl(x) : k === 'pecasFaixa2' ? `${x} peças` : k === 'whatsapp' ? formataZap(x) : `“${x}”`);
+      const fmt = (x) => {
+        if (k === 'expressMinimo') return brl(x);
+        if (k === 'pecasFaixa2') return `${x} peças`;
+        if (k === 'whatsapp') return formataZap(x);
+        if (k === 'descontoSeguir') return `${x ?? 0}%`;
+        if (k === 'perfisInstagram') return textoPerfis(x) || 'nenhum';
+        return `“${x}”`;
+      };
       itens.push({ titulo: `Regras: ${rotuloCfg[k] || k}`, detalhe: k === 'mensagemConsulta' ? 'texto alterado' : `${fmt(antes)} → ${fmt(v)}` });
     }
     return itens;
@@ -1031,6 +1263,7 @@
       guarda(localStorage, CHAVES.rascunho, null);
       desenhaFiltroMarcas();
       desenhaLista();
+      desenhaVitrine();
       desenhaMarcas();
       desenhaConfig();
       desenhaAvisos();
@@ -1061,6 +1294,7 @@
     S.rascunhoRecuperado = null;
     desenhaFiltroMarcas();
     desenhaLista();
+    desenhaVitrine();
     desenhaMarcas();
     desenhaConfig();
     desenhaAvisos();
