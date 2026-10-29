@@ -511,10 +511,37 @@
   /* ---------- Janelas: abrir/fechar ---------- */
 
   $$('dialog [data-fecha]').forEach((b) => b.addEventListener('click', () => b.closest('dialog').close()));
-  $('#dlg-publicar').addEventListener('cancel', (e) => { if (S.publicando) e.preventDefault(); });
-  ['#dlg-conectar', '#dlg-marca', '#dlg-publicar'].forEach((sel) => {
-    const d = $(sel);
-    d.addEventListener('click', (e) => { if (e.target === d && !S.publicando) d.close(); });
+  /* Janelas: caixas fixas comuns + um fundo escuro próprio. Não usamos showModal(): o Safari do
+     iPhone deixava só o fundo escuro e não desenhava a janela por cima. */
+  const fundoDlg = $('#fundo-dlg');
+  let zJanela = 100;
+  const janelasAbertas = () => $$('dialog.dlg[open]');
+  const janelaDeCima = () => janelasAbertas().sort((a, b) => Number(b.style.zIndex) - Number(a.style.zIndex))[0];
+  function atualizaFundo() {
+    const abertas = janelasAbertas();
+    fundoDlg.hidden = !abertas.length;
+    document.body.classList.toggle('com-dialogo', abertas.length > 0);
+    ['.topo', '#miolo', '#barra-publicar'].forEach((sel) => { const el = $(sel); if (el) el.inert = abertas.length > 0; });
+    if (abertas.length) fundoDlg.style.zIndex = String(Math.max(...abertas.map((d) => Number(d.style.zIndex) || 100)) - 1);
+  }
+  function abreJanela(d) {
+    zJanela += 2;
+    d.style.zIndex = String(zJanela);
+    if (!d.open) d.show();
+    atualizaFundo();
+    // no celular o foco vai para a própria janela (sem anel no botão × e sem teclado subindo sozinho)
+    if (window.matchMedia('(pointer: coarse)').matches) { d.tabIndex = -1; d.focus({ preventScroll: true }); }
+  }
+  $$('dialog.dlg').forEach((d) => d.addEventListener('close', atualizaFundo));
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const d = janelaDeCima();
+    if (d && !(d.id === 'dlg-publicar' && S.publicando)) d.close();
+  });
+  // tocar no fundo escuro fecha as janelas simples (a de produto fica de fora para não perder o que foi digitado)
+  fundoDlg.addEventListener('click', () => {
+    const d = janelaDeCima();
+    if (d && ['dlg-conectar', 'dlg-marca', 'dlg-publicar'].includes(d.id) && !S.publicando) d.close();
   });
 
   /* ---------- Foto ---------- */
@@ -652,7 +679,7 @@
     $('#dp-foto').value = '';
     $('#dp-foto-info').textContent = 'A foto é ajustada sozinha (quadrada, fundo branco e leve). Sem foto, o site mostra uma ilustração da embalagem.';
     previaFoto();
-    dp.dlg.showModal();
+    abreJanela(dp.dlg);
     if (!existente) foca(dp.nome);
   }
 
@@ -1100,7 +1127,7 @@
     dm.sub.value = (m && m.sub) || '';
     dm.erro.hidden = true;
     previaMarca();
-    dm.dlg.showModal();
+    abreJanela(dm.dlg);
     if (!m) foca(dm.nome);
   }
 
@@ -1267,7 +1294,7 @@
     dc.estado.textContent = motivo || (S.token ? `Conectado a ${S.repo}.` : '');
     dc.sair.hidden = !S.token;
     dc.ok.textContent = S.token ? 'Salvar' : 'Conectar';
-    dc.dlg.showModal();
+    abreJanela(dc.dlg);
     foca(dc.token);
   }
 
@@ -1393,7 +1420,7 @@
   const dlgPub = $('#dlg-publicar');
 
   function abrePublicar() {
-    if (S.publicando) { if (!dlgPub.open) dlgPub.showModal(); return; }
+    if (S.publicando) { if (!dlgPub.open) abreJanela(dlgPub); return; }
     if (!S.total) { mostraToast('Não há nada novo para publicar.'); return; }
     if (!S.token) { abreConectar('Antes de publicar, conecte o painel ao GitHub. É só na primeira vez.', abrePublicar); return; }
     const { erros, avisos } = Core.validar(S.atual);
@@ -1412,7 +1439,7 @@
         </div>
         <footer class="dlg__rodape"><span class="espaco"></span><button class="btn btn--sec" type="button" data-pub-fecha>Voltar</button><button class="btn btn--prim" type="button" id="pb-confirmar">Publicar agora</button></footer>`;
     }
-    if (!dlgPub.open) dlgPub.showModal();
+    if (!dlgPub.open) abreJanela(dlgPub);
   }
 
   pub.addEventListener('click', (e) => {
