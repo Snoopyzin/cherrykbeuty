@@ -164,7 +164,7 @@ window.CHERRY_PRODUTOS = [
   // ---------- Dr. Althea ----------
   { id: 'dr-althea-345-cream', marca: 'dr-althea', categoria: 'skincare',
     nome: '345 Relief Cream Intense – 50ml', tipo: 'Creme reparador', destaque: true,
-    preco: 236, preco30: 229, precoAntigo: 259, imagem: FOTO('dr-althea-345-cream'),
+    preco: 99.5, preco30: 229, precoAntigo: 259, imagem: FOTO('dr-althea-345-cream'),
     arte: { forma: 'bisnaga', corpo: '#fbfbfb', tampa: '#ececec', texto: '#444444' } },
 
   // ---------- Fino (haircare) ----------
