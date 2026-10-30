@@ -50,6 +50,12 @@ window.CHERRY_MARCAS = [
   { id: 'etude', nome: 'Etude', logo: 'ETUDE', estilo: 'espacado', cor: '#e0457b' },
   { id: 'eucerin', nome: 'Eucerin', logo: 'Eucerin', estilo: 'sans', cor: '#0b3a7a' },
   { id: 'axis-y', nome: 'Axis-Y', logo: 'AXIS-Y', estilo: 'espacado', cor: '#1f7a3c' },
+  { id: 'karseell', nome: 'Karseell', logo: 'Karseell', estilo: 'sans', cor: '#ffffff', fundo: '#3c071b' },
+  { id: 'kerasys', nome: 'Kerasys', logo: 'Kerasys', estilo: 'sans', cor: '#111111' },
+  { id: 'revlon-professional', nome: 'Revlon Professional', logo: 'Revlon Professional', estilo: 'sans', cor: '#111111', fundo: '#b51a00' },
+  { id: 'elizavecca', nome: 'ELIZAVECCA', logo: 'ELIZAVECCA', estilo: 'sans', cor: '#111111' },
+  { id: 'victorias-secret', nome: 'Victoria’s Secret', logo: 'Victoria’s Secret', estilo: 'sans', cor: '#111111' },
+  { id: 'v-s', nome: 'V.S', logo: 'V.S', estilo: 'sans', cor: '#111111', sub: 'Victoria\'s Secret' },
 ];
 
 const FOTO = (id) => `images/produtos/${id}.webp`;
@@ -132,7 +138,8 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'celimax-pore-dark-spot-cream', marca: 'celimax', categoria: 'skincare',
     nome: 'Pore + Dark Spot Cream – 35ml', tipo: 'Creme clareador',
-    preco: 149, preco30: 139, precoAntigo: 160, imagem: FOTO('celimax-pore-dark-spot-cream'),
+    preco: 149, preco30: 139, precoAntigo: 160, imagem: 'images/produtos/celimax-pore-dark-spot-cream-mvvf43000.jpg',
+    galeria: ['images/produtos/celimax-pore-dark-spot-cream-mvvf43001.jpg'],
     arte: { forma: 'bisnaga', corpo: '#fbfbf8', tampa: '#f6a623', texto: '#b36b00' } },
 
   { id: 'celimax-pore-dark-spot-pads', marca: 'celimax', categoria: 'skincare',
@@ -210,7 +217,7 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'medicube-pdrn-volume-balm', marca: 'medicube', categoria: 'skincare',
     nome: 'PDRN Pink Collagen Volume Balm – 55g', tipo: 'Balm antissinais',
-    preco: 189, preco30: 169, imagem: '',
+    preco: 189, preco30: 169, imagem: 'images/produtos/medicube-pdrn-volume-balm.jpg',
     arte: { forma: 'pote', corpo: '#f4a7bb', tampa: '#fbe2e9', texto: '#ffffff' } },
 
   { id: 'lilyeve-grow-exosome', marca: 'lilyeve', categoria: 'skincare',
@@ -319,8 +326,8 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'biore-uv-aqua-rich', marca: 'biore', categoria: 'skincare',
     nome: 'UV Aqua Rich Watery Essence SPF50+ PA++++', tipo: 'Protetor solar',
-    preco: 79, preco30: 69, imagem: FOTO('biore-uv-aqua-rich'),
-    galeria: ['images/produtos/biore-uv-aqua-rich-mvvcir771.jpg', 'images/produtos/biore-uv-aqua-rich-mvvcir772.jpg', 'images/produtos/biore-uv-aqua-rich-mvvcir773.jpg'],
+    preco: 79, preco30: 69, imagem: 'images/produtos/biore-uv-aqua-rich-mvvf9y2z0.jpg',
+    galeria: ['images/produtos/biore-uv-aqua-rich.webp', 'images/produtos/biore-uv-aqua-rich-mvvcir771.jpg', 'images/produtos/biore-uv-aqua-rich-mvvcir772.jpg', 'images/produtos/biore-uv-aqua-rich-mvvcir773.jpg'],
     arte: { forma: 'bisnaga', corpo: '#3fc6d8', tampa: '#f4f4f4', texto: '#ffffff' } },
 
   { id: 'biore-facial-wash-moisture', marca: 'biore', categoria: 'skincare',
@@ -372,5 +379,125 @@ window.CHERRY_PRODUTOS = [
   { id: 'axis-y-dark-spot-serum', marca: 'axis-y', categoria: 'skincare',
     nome: 'Dark Spot Correcting Glow Serum – 50ml', tipo: 'Sérum para manchas',
     preco: 148, imagem: FOTO('axis-y-dark-spot-serum'),
+    galeria: ['images/produtos/axis-y-dark-spot-serum-mvvf577n1.jpg', 'images/produtos/axis-y-dark-spot-serum-mvvf577n2.jpg'],
     arte: { forma: 'bisnaga', corpo: '#f4f7f2', tampa: '#1f7a3c', texto: '#1f7a3c' } },
+
+  { id: 'beauty-of-joseon-green-plum-refreshing-cleanser-100ml', marca: 'beauty-of-joseon', categoria: 'skincare',
+    nome: 'Beauty of Joseon Green Plum Refreshing Cleanser 100ml', tipo: 'é um gel de limpeza facial coreano com pH levemente ácido',
+    preco: 80, preco30: 89.9, precoAntigo: 110, imagem: 'images/produtos/beauty-of-joseon-green-plum-refreshing-cleanser-100ml.jpg',
+    galeria: ['images/produtos/beauty-of-joseon-green-plum-refreshing-cleanser-100ml-mvvcw5xh1.jpg'],
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'biore-skincare-facial-wash-acne-care-130g', marca: 'biore', categoria: 'skincare',
+    nome: 'Bioré Skincare Facial Wash Acne Care 130g', tipo: 'Desenvolvido especialmente para peles oleosas, mistas e com tendência à acne.',
+    preco: 50, preco30: 45, precoAntigo: 69.8, imagem: 'images/produtos/biore-skincare-facial-wash-acne-care-130g.jpg',
+    galeria: ['images/produtos/biore-skincare-facial-wash-acne-care-130g-mvvcyrtx1.jpg'],
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'skin1004-espuma-de-limpeza-facial-madagascar-centella-ampoule-fo', marca: 'skin1004', categoria: 'skincare',
+    nome: 'Espuma de Limpeza Facial Madagascar Centella Ampoule Foam 125ml', tipo: 'é um sabonete facial formulado com pH balanceado (pH 5) e extrato puro de Centella Asiática de Madagascar.',
+    preco: 102.38, preco30: 92.38, imagem: 'images/produtos/skin1004-espuma-de-limpeza-facial-madagascar-centella-ampoule-fo.jpg',
+    galeria: ['images/produtos/skin1004-espuma-de-limpeza-facial-madagascar-centella-ampoule-fo-mvvd0l911.jpg', 'images/produtos/skin1004-espuma-de-limpeza-facial-madagascar-centella-ampoule-fo-mvvd0l912.jpg'],
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'biore-oleo-demaquilante-facial-cleansing-oil-original-150ml', marca: 'biore', categoria: 'skincare',
+    nome: 'Bioré Oleo Demaquilante Facial Cleansing Oil Original 150ml', tipo: 'Make up Remover',
+    preco: 69.9, preco30: 59.9, imagem: 'images/produtos/biore-oleo-demaquilante-facial-cleansing-oil-original-150ml.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'karseell-mascara-capilar-karseell', marca: 'karseell', categoria: 'haircare',
+    nome: 'Máscara Capilar Karseell', tipo: 'Mais famosa na versão com colágeno e maca essence. É um tratamento de reparação e hidratação profunda para os fios.',
+    preco: 80, preco30: 75, precoAntigo: 100, imagem: 'images/produtos/karseell-mascara-capilar-karseell.jpg',
+    galeria: ['images/produtos/karseell-mascara-capilar-karseell-mvvd6fe31.jpg'],
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'biore-marshmallaca-whip', marca: 'biore', categoria: 'skincare',
+    nome: 'Marshmallaca Whip', tipo: 'Espuma leve e cremosa como Marshmallow, para todos os tipos de pele;   Limpa suavemente protegendo a hidratação natural da pele graças a Exclusiva tecnologia SPT (Skin Purifying Technology), Fragrância suave floral de lírio do campo e jasmim e possui refil.',
+    preco: 75.5, preco30: 85, precoAntigo: 85, imagem: 'images/produtos/biore-marshmallaca-whip.jpg',
+    galeria: ['images/produtos/biore-marshmallaca-whip-mvvd97r41.jpg', 'images/produtos/biore-marshmallaca-whip-mvvd97r42.jpg', 'images/produtos/biore-marshmallaca-whip-mvvd97r43.jpg'],
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'biore-moist-jelly-lotion', marca: 'biore', categoria: 'skincare',
+    nome: 'Bioré Moist Jelly Lotion', tipo: 'Loção hidratante leve para complementar a hidratação e deixar a pele mais macia e viçosa.',
+    preco: 94.9, preco30: 84.46, imagem: 'images/produtos/biore-moist-jelly-lotion.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'kerasys-revitalizing-shampoo', marca: 'kerasys', categoria: 'haircare',
+    nome: 'Kerasys Revitalizing Shampoo', tipo: 'é um produto capilar de origem coreana formulado especialmente para cabelos finos, sem volume, opacos, quebradiços ou com frizz.',
+    preco: 69.8, preco30: 65.9, precoAntigo: 75.9, imagem: 'images/produtos/kerasys-revitalizing-shampoo.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'kerasys-revitalizing-conditioner', marca: 'kerasys', categoria: 'haircare',
+    nome: 'Kerasys Revitalizing conditioner', tipo: 'é um condicionador sul-coreano desenvolvido especialmente para cabelos finos, sem volume, opacos, com frizz ou danificados.',
+    preco: 74.9, preco30: 69.9, precoAntigo: 79.9, imagem: 'images/produtos/kerasys-revitalizing-conditioner.jpg',
+    galeria: ['images/produtos/kerasys-revitalizing-conditioner-mvvdl0611.jpg'],
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'revlon-professional-revlon-profissional-uniq-one-leave-in-150ml', marca: 'revlon-professional', categoria: 'haircare',
+    nome: 'Revlon Profissional Uniq One - Leave-in 150ml', tipo: 'é um tratamento capilar multifuncional 10 em 1 da Revlon Professional indicado para todos os tipos de cabelo.',
+    preco: 99.9, preco30: 84.9, imagem: 'images/produtos/revlon-professional-revlon-profissional-uniq-one-leave-in-150ml.jpg',
+    galeria: ['images/produtos/revlon-professional-revlon-profissional-uniq-one-leave-in-150ml-mvvdvowm1.jpg'],
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'celimax-lilyeve-grow-turn-exosome-brush-ampoule', marca: 'lilyeve', categoria: 'haircare',
+    nome: 'Lilyeve Grow Turn Exosome Brush Ampoule', tipo: 'é um tratamento capilar sul-coreano que funciona para melhorar a saúde do couro cabeludo, reduzir a queda e estimular o crescimento de fios mais fortes.',
+    preco: 96.5, preco30: 76.5, imagem: 'images/produtos/celimax-lilyeve-grow-turn-exosome-brush-ampoule.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'lilyeve-scalp-turn-cica-pdrn-brush-ampoule-100ml', marca: 'lilyeve', categoria: 'haircare',
+    nome: 'Lilyeve - Scalp Turn Cica PDRN Brush Ampoule 100ml', tipo: 'É um tônico capilar coreano K-Beauty focado na saúde do couro cabeludo.',
+    preco: 96.5, preco30: 81.5, imagem: 'images/produtos/lilyeve-scalp-turn-cica-pdrn-brush-ampoule-100ml.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'elizavecca-mascara-reconstrutora-elizavecca-cer-100-collagen-cer', marca: 'elizavecca', categoria: 'haircare',
+    nome: 'Máscara Reconstrutora Elizavecca Cer-100 Collagen Ceramide Coating Protein Treatment', tipo: 'A Máscara Reconstrutora Elizavecca CER-100 Collagen Ceramide Coating Protein Treatment é um tratamento intensivo para cabelos secos, desidratados, porosos e danificados. Com textura cremosa, promove hidratação intensa, ajuda a restaurar os fios e devolve maciez, brilho e maleabilidade desde a primeira aplicação.',
+    preco: 78.43, preco30: 68.49, imagem: 'images/produtos/elizavecca-mascara-reconstrutora-elizavecca-cer-100-collagen-cer.jpg',
+    galeria: ['images/produtos/elizavecca-mascara-reconstrutora-elizavecca-cer-100-collagen-cer-mvve8ufe1.jpg'],
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'numbuzin-no-9-nad-retinol-volumetox-eye-cream', marca: 'numbuzin', categoria: 'skincare',
+    nome: 'Numbuzin No.9 NAD+ Retinol Volumetox Eye Cream', tipo: 'É um creme coreano de tratamento antissinais para a área dos olhos, famoso por combinar ativos de alta performance com efeito preenchedor e firmador.',
+    preco: 78.06, preco30: 78.06, precoAntigo: 92.06, imagem: 'images/produtos/numbuzin-no-9-nad-retinol-volumetox-eye-cream.jpg',
+    galeria: ['images/produtos/numbuzin-no-9-nad-retinol-volumetox-eye-cream-mvvedz7r1.jpg', 'images/produtos/numbuzin-no-9-nad-retinol-volumetox-eye-cream-mvvedz7r2.jpg'],
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'victorias-secret-victoria-secret-bare-vanilla', marca: 'victorias-secret', categoria: 'skincare',
+    nome: 'Victoria Secret Bare Vanilla', tipo: 'Body Splash', selo: 'Lançamento',
+    preco: 95, preco30: 95, precoAntigo: 189, imagem: 'images/produtos/victorias-secret-victoria-secret-bare-vanilla-mvverzq90.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'victorias-secret-victoria-secret-coconut-passion', marca: 'victorias-secret', categoria: 'skincare',
+    nome: 'Victoria Secret Coconut Passion', tipo: 'Body Splash', selo: 'Lançamento',
+    preco: 94, preco30: 95, precoAntigo: 189, imagem: 'images/produtos/victorias-secret-victoria-secret-coconut-passion-mvveqce10.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'victorias-secret-victoria-secret-aqua-kiss', marca: 'victorias-secret', categoria: 'skincare',
+    nome: 'Victoria Secret Aqua Kiss', tipo: 'Body Splash', selo: 'Lançamento',
+    preco: 95, preco30: 95, precoAntigo: 189, imagem: 'images/produtos/victorias-secret-victoria-secret-aqua-kiss.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'v-s-secrets-of-romance-midnight-flower', marca: 'v-s', categoria: 'skincare',
+    nome: 'V.S 💜 Secrets of Romance - Midnight Flower', tipo: 'É uma colônia corporal leve, também conhecida internacionalmente como Fragrance Mist.', selo: 'Lançamento',
+    preco: 75, precoAntigo: 95, imagem: 'images/produtos/v-s-secrets-of-romance-midnight-flower.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'v-s-secrets-of-romance-kiss-spell-shimmer', marca: 'v-s', categoria: 'skincare',
+    nome: 'V.S 🪩 Secrets of Romance - Kiss Spell Shimmer', tipo: 'é uma colônia corporal leve, também conhecida internacionalmente como Fragrance Mist.', selo: 'Lançamento',
+    preco: 85, precoAntigo: 100, imagem: 'images/produtos/v-s-secrets-of-romance-kiss-spell-shimmer.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'v-s-os-tres-shimmer-disponivel-preco-unitario', marca: 'v-s', categoria: 'skincare',
+    nome: 'V.S os três, Shimmer disponível. (PREÇO UNITÁRIO).', tipo: 'é uma colônia corporal leve, também conhecida internacionalmente como Fragrance Mist.', selo: 'Lançamento',
+    preco: 85, precoAntigo: 100, imagem: 'images/produtos/v-s-os-tres-shimmer-disponivel-preco-unitario.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'victorias-secret-radiant-wings-shimmer', marca: 'victorias-secret', categoria: 'skincare',
+    nome: 'Victoria’s Secret 🌟 Radiant Wings Shimmer', tipo: 'Body Splash', selo: 'Lançamento',
+    preco: 170, precoAntigo: 180, imagem: 'images/produtos/victorias-secret-radiant-wings-shimmer.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'celimax-victorias-secret-rich-caramel-vanilla', marca: 'victorias-secret', categoria: 'skincare',
+    nome: 'Victoria\'s Secret Rich Caramel Vanilla', tipo: 'Body Splash', selo: 'Lançamento',
+    preco: 179, imagem: 'images/produtos/celimax-victorias-secret-rich-caramel-vanilla.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
 ];
