@@ -127,6 +127,7 @@ window.CHERRY_PRODUTOS = [
   { id: 'celimax-retinal-shot', marca: 'celimax', categoria: 'skincare',
     nome: 'Retinal Shot Tightening Booster – 15ml', tipo: 'Booster antissinais',
     preco: 130, preco30: 130, precoAntigo: 180, imagem: FOTO('celimax-retinal-shot'),
+    galeria: ['images/produtos/celimax-retinal-shot-mvvc83h81.jpg', 'images/produtos/celimax-retinal-shot-mvvc83h82.jpg'],
     arte: { forma: 'bisnaga', corpo: '#f5d36b', tampa: '#e0a826', texto: '#7a4a00' } },
 
   { id: 'celimax-pore-dark-spot-cream', marca: 'celimax', categoria: 'skincare',
@@ -165,6 +166,7 @@ window.CHERRY_PRODUTOS = [
   { id: 'dr-althea-345-cream', marca: 'dr-althea', categoria: 'skincare',
     nome: '345 Relief Cream Intense – 50ml', tipo: 'Creme reparador', destaque: true,
     preco: 99.5, preco30: 229, precoAntigo: 259, imagem: FOTO('dr-althea-345-cream'),
+    galeria: ['images/produtos/dr-althea-345-cream-mvvc8qid1.jpg'],
     arte: { forma: 'bisnaga', corpo: '#fbfbfb', tampa: '#ececec', texto: '#444444' } },
 
   // ---------- Fino (haircare) ----------
@@ -182,7 +184,8 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'celimax-vita-a-retinal-duo', marca: 'celimax', categoria: 'skincare',
     nome: 'Vita A Retinal Shot Duo – 50ml', tipo: 'Tratamento antissinais',
-    preco: 169, preco30: 159, imagem: FOTO('celimax-vita-a-retinal-duo'),
+    preco: 165.8, preco30: 159, precoAntigo: 195, imagem: FOTO('celimax-vita-a-retinal-duo'),
+    galeria: ['images/produtos/celimax-vita-a-retinal-duo-mvvca2zc1.jpg', 'images/produtos/celimax-vita-a-retinal-duo-mvvca2zc2.jpg', 'images/produtos/celimax-vita-a-retinal-duo-mvvca2zc3.jpg'],
     arte: { forma: 'pump', corpo: '#f4c95d', tampa: '#fbfaf6', texto: '#7a4a00' } },
 
   { id: 'numbuzin-no5-glutathione', marca: 'numbuzin', categoria: 'skincare',
@@ -218,6 +221,7 @@ window.CHERRY_PRODUTOS = [
   { id: 'skin1004-light-cleansing-oil', marca: 'skin1004', categoria: 'skincare',
     nome: 'Madagascar Centella Light Cleansing Oil – 200ml', tipo: 'Óleo de limpeza',
     preco: 137, preco30: 137, precoAntigo: 155, imagem: FOTO('skin1004-light-cleansing-oil'),
+    galeria: ['images/produtos/skin1004-light-cleansing-oil-mvvcd89n1.jpg', 'images/produtos/skin1004-light-cleansing-oil-mvvcd89n2.jpg'],
     arte: { forma: 'pump', corpo: '#ecd08f', tampa: '#efeae0', texto: '#6b5a3a' } },
 
   { id: 'skin1004-tone-brightening-gel-foam', marca: 'skin1004', categoria: 'skincare',
@@ -254,17 +258,17 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'medicube-zero-pore-pad-mild', marca: 'medicube', categoria: 'skincare',
     nome: 'Zero Pore Pad Mild – 70 discos (155g)', tipo: 'Pads esfoliantes suaves',
-    preco: 200, preco30: 170, imagem: FOTO('medicube-zero-pore-pad-mild'),
+    preco: 175, preco30: 170, precoAntigo: 200, imagem: FOTO('medicube-zero-pore-pad-mild'),
     arte: { forma: 'pote', corpo: '#eef3f8', tampa: '#6ec3f0', texto: '#2d3a55' } },
 
   { id: 'medicube-red-succinic-peeling-pad', marca: 'medicube', categoria: 'skincare',
     nome: 'Red Succinic Acid Peeling Pad – 70 discos (155g)', tipo: 'Pads esfoliantes',
-    preco: 200, preco30: 170, imagem: FOTO('medicube-red-succinic-peeling-pad'),
+    preco: 175, preco30: 170, precoAntigo: 200, imagem: FOTO('medicube-red-succinic-peeling-pad'),
     arte: { forma: 'pote', corpo: '#f3d9d9', tampa: '#c8102e', texto: '#c8102e' } },
 
   { id: 'medicube-pdrn-pink-toner-pad', marca: 'medicube', categoria: 'skincare',
     nome: 'PDRN Pink Collagen Toning Gel Toner Pad – 70 discos (120ml)', tipo: 'Pads tonificantes',
-    preco: 200, preco30: 170, imagem: FOTO('medicube-pdrn-pink-toner-pad'),
+    preco: 180, preco30: 170, precoAntigo: 200, imagem: FOTO('medicube-pdrn-pink-toner-pad'),
     arte: { forma: 'pote', corpo: '#f7b6c6', tampa: '#f28fa9', texto: '#ffffff' } },
 
   { id: 'medicube-pdrn-pink-gel-mask', marca: 'medicube', categoria: 'skincare',
@@ -295,6 +299,7 @@ window.CHERRY_PRODUTOS = [
   { id: 'celimax-retinol-shot-serum', marca: 'celimax', categoria: 'skincare',
     nome: 'Retinol Shot Tightening Serum', tipo: 'Sérum antissinais',
     preco: 169, preco30: 149, imagem: FOTO('celimax-retinol-shot-serum'),
+    galeria: ['images/produtos/celimax-retinol-shot-serum-mvvch4091.jpg', 'images/produtos/celimax-retinol-shot-serum-mvvch4092.jpg', 'images/produtos/celimax-retinol-shot-serum-mvvch4093.jpg', 'images/produtos/celimax-retinol-shot-serum-mvvch4094.jpg'],
     arte: { forma: 'pump', corpo: '#d9dbde', tampa: '#c6dc3c', texto: '#4a4a4a' } },
 
   { id: 'skin1004-centella-ampoule', marca: 'skin1004', categoria: 'skincare',
@@ -315,11 +320,13 @@ window.CHERRY_PRODUTOS = [
   { id: 'biore-uv-aqua-rich', marca: 'biore', categoria: 'skincare',
     nome: 'UV Aqua Rich Watery Essence SPF50+ PA++++', tipo: 'Protetor solar',
     preco: 79, preco30: 69, imagem: FOTO('biore-uv-aqua-rich'),
+    galeria: ['images/produtos/biore-uv-aqua-rich-mvvcir771.jpg', 'images/produtos/biore-uv-aqua-rich-mvvcir772.jpg', 'images/produtos/biore-uv-aqua-rich-mvvcir773.jpg'],
     arte: { forma: 'bisnaga', corpo: '#3fc6d8', tampa: '#f4f4f4', texto: '#ffffff' } },
 
   { id: 'biore-facial-wash-moisture', marca: 'biore', categoria: 'skincare',
     nome: 'Skin Care Facial Wash Moisture', tipo: 'Espuma de limpeza',
-    preco: 49, preco30: 45, imagem: FOTO('biore-facial-wash-moisture'),
+    preco: 50, preco30: 45, precoAntigo: 69.8, imagem: FOTO('biore-facial-wash-moisture'),
+    galeria: ['images/produtos/biore-facial-wash-moisture-mvvcj6bx1.jpg'],
     arte: { forma: 'bisnaga', corpo: '#ffffff', tampa: '#f4f4f4', texto: '#1f3f9a' } },
 
   { id: 'rhode-peptide-lip-tint', marca: 'rhode', categoria: 'skincare',
@@ -359,7 +366,7 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'boj-relief-sun-aqua-fresh', marca: 'beauty-of-joseon', categoria: 'skincare',
     nome: 'Relief Sun Aqua-Fresh: Rice + B5 SPF50+ PA++++', tipo: 'Protetor solar',
-    preco: 78.17, imagem: FOTO('boj-relief-sun-aqua-fresh'),
+    preco: 78.17, precoAntigo: 88.17, imagem: FOTO('boj-relief-sun-aqua-fresh'),
     arte: { forma: 'bisnaga', corpo: '#f6f1e7', tampa: '#9db7e0', texto: '#5a4a32' } },
 
   { id: 'axis-y-dark-spot-serum', marca: 'axis-y', categoria: 'skincare',
