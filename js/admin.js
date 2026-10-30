@@ -25,7 +25,7 @@
   const FORMAS = [['pote', 'Pote'], ['bisnaga', 'Bisnaga / tubo'], ['spray', 'Spray'], ['conta-gotas', 'Conta-gotas'], ['frasco', 'Frasco'], ['pump', 'Frasco com bomba'], ['caneta', 'Caneta'], ['caixa', 'Caixa / ampolas']];
   const ESTILOS = [['sans', 'Moderna em negrito'], ['sans-leve', 'Moderna leve'], ['espacado', 'Letras espaçadas'], ['script', 'Cursiva'], ['serif', 'Elegante com serifa'], ['coreano', 'Coreano']];
   const ARTE_PADRAO = { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' };
-  const ROTULOS = { preco: 'Preço', preco30: 'Atacado', precoAntigo: 'Preço antigo', nome: 'Nome', tipo: 'Texto curto', marca: 'Marca', categoria: 'Categoria', selo: 'Etiqueta', imagem: 'Foto', arte: 'Ilustração' };
+  const ROTULOS = { preco: 'Preço', preco30: 'Atacado', precoAntigo: 'Preço antigo', nome: 'Nome', tipo: 'Texto curto', marca: 'Marca', categoria: 'Categoria', selo: 'Etiqueta', imagem: 'Foto', arte: 'Ilustração', galeria: 'Fotos extras' };
 
   const S = {
     original: null,            // como está no site
@@ -130,6 +130,8 @@
   const temPreco = (p) => typeof p.preco === 'number';
   const ehPromo = (p) => temPreco(p) && typeof p.precoAntigo === 'number' && p.precoAntigo > p.preco;
   const srcFoto = (caminho) => (S.fotos.get(caminho) || {}).dataUrl || S.publicadas.get(caminho) || caminho;
+  // todas as fotos do produto: a principal (imagem) e as extras (galeria)
+  const todasFotos = (p) => [p.imagem, ...(p.galeria || [])].filter(Boolean);
   const dataHora = (ms) => new Date(ms).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
 
   function reindexa() {
@@ -171,7 +173,7 @@
       if (!S.total) {
         guarda(localStorage, CHAVES.rascunho, null);
       } else {
-        const emUso = new Set(S.atual.produtos.map((p) => p.imagem));
+        const emUso = new Set(S.atual.produtos.flatMap(todasFotos));
         const fotos = {};
         for (const [caminho, f] of S.fotos) if (emUso.has(caminho)) fotos[caminho] = f.dataUrl;
         falhou = !guarda(localStorage, CHAVES.rascunho, JSON.stringify({ v: 1, salvoEm: Date.now(), original: S.original, atual: S.atual, fotos }));
@@ -268,6 +270,7 @@
       e === 'mudou' && '<span class="etq etq--mudou">Alterado</span>',
       !temPreco(p) && '<span class="etq etq--alerta">Sem preço</span>',
       !p.imagem && '<span class="etq">Sem foto</span>',
+      todasFotos(p).length > 1 && `<span class="etq">${todasFotos(p).length} fotos</span>`,
     ].filter(Boolean).join('');
   }
 
@@ -456,7 +459,7 @@
   function desfazProduto(id) {
     const i = S.atual.produtos.findIndex((p) => p.id === id);
     const o = S.origPorId.get(id);
-    const foto = S.atual.produtos[i].imagem;
+    const fotosAntes = todasFotos(S.atual.produtos[i]);
     if (!o) {
       S.atual.produtos.splice(i, 1);
       delete S.atual.descricoes[id];
@@ -466,7 +469,7 @@
       if (S.original.descricoes[id]) S.atual.descricoes[id] = Core.clonar(S.original.descricoes[id]);
       else delete S.atual.descricoes[id];
     }
-    if (S.fotos.has(foto) && !S.atual.produtos.some((p) => p.imagem === foto)) S.fotos.delete(foto);
+    for (const f of fotosAntes) if (S.fotos.has(f) && !S.atual.produtos.some((p) => todasFotos(p).includes(f))) S.fotos.delete(f);
     desenhaLista();
     mudou();
     mostraToast(o ? 'Alterações do produto desfeitas.' : 'Produto novo descartado.');
@@ -591,7 +594,7 @@
     preco: $('#dp-preco'), preco30: $('#dp-preco30'), antigo: $('#dp-antigo'),
     resumo: $('#dp-resumo'), serve: $('#dp-serve'), beneficios: $('#dp-beneficios'), ativos: $('#dp-ativos'), rotina: $('#dp-rotina'), importante: $('#dp-importante'),
     forma: $('#dp-forma'), corpo: $('#dp-cor-corpo'), tampa: $('#dp-cor-tampa'), texto: $('#dp-cor-texto'),
-    erro: $('#dp-erro'), prev: $('#dp-foto-prev'), info: $('#dp-foto-info'),
+    erro: $('#dp-erro'), fotos: $('#dp-fotos'), info: $('#dp-foto-info'),
   };
   dp.forma.innerHTML = FORMAS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('');
   let ed = null;
@@ -630,10 +633,21 @@
     }
   });
 
-  function previaFoto() {
-    const src = ed.foto ? ed.foto.dataUrl : (!ed.removeFoto && ed.p.imagem ? srcFoto(ed.p.imagem) : '');
-    dp.prev.innerHTML = src ? `<img src="${esc(src)}" alt="">` : '<span>sem foto</span>';
-    $('#dp-foto-remover').hidden = !src;
+  const MAX_FOTOS = 10;
+  const textoFotosPadrao = dp.info.textContent;
+  function desenhaFotos() {
+    const l = ed.fotos;
+    dp.fotos.innerHTML = l.length
+      ? l.map((f, i) => `<li class="foto-item${i === 0 ? ' foto-item--principal' : ''}" data-i="${i}">
+          <div class="foto-item__img"><img src="${esc(f.dataUrl || srcFoto(f.caminho))}" alt="Foto ${i + 1}"></div>
+          ${i === 0 ? '<span class="foto-item__selo">Principal</span>' : ''}
+          <div class="foto-item__acoes">
+            <button class="mini" type="button" data-foto-acao="esq" aria-label="Mover a foto ${i + 1} para a esquerda"${i === 0 ? ' disabled' : ''}>←</button>
+            <button class="mini" type="button" data-foto-acao="dir" aria-label="Mover a foto ${i + 1} para a direita"${i === l.length - 1 ? ' disabled' : ''}>→</button>
+            <button class="mini" type="button" data-foto-acao="remover" aria-label="Remover a foto ${i + 1}">✕</button>
+          </div>
+        </li>`).join('')
+      : '<li class="foto-vazia">Nenhuma foto ainda. O site vai mostrar uma ilustração da embalagem.</li>';
   }
 
   function abreProduto(id) {
@@ -643,7 +657,7 @@
       id: '', marca: S.filtro.marca || S.atual.marcas[0].id, categoria: S.filtro.cat === 'haircare' ? 'haircare' : 'skincare',
       nome: '', tipo: '', preco: null, imagem: '', arte: { ...ARTE_PADRAO },
     };
-    ed = { novo: !existente, p, desc: existente ? Core.clonar(S.atual.descricoes[id]) || null : null, foto: null, removeFoto: false };
+    ed = { novo: !existente, p, desc: existente ? Core.clonar(S.atual.descricoes[id]) || null : null, fotos: todasFotos(p).map((c) => ({ caminho: c })), fotosAntes: todasFotos(p) };
 
     $('#dp-titulo').textContent = existente ? 'Editar produto' : 'Novo produto';
     dp.nome.value = p.nome;
@@ -677,32 +691,42 @@
     $('#dp-excluir').hidden = !existente;
     $('#dp-desc-det').open = false;
     $('#dp-foto').value = '';
-    $('#dp-foto-info').textContent = 'A foto é ajustada sozinha (quadrada, fundo branco e leve). Sem foto, o site mostra uma ilustração da embalagem.';
-    previaFoto();
+    dp.info.textContent = textoFotosPadrao;
+    desenhaFotos();
     abreJanela(dp.dlg);
     if (!existente) foca(dp.nome);
   }
 
   $('#dp-foto').addEventListener('change', async (e) => {
-    const arquivo = e.target.files[0];
-    if (!arquivo) return;
-    dp.info.textContent = 'Preparando a foto…';
-    try {
-      ed.foto = await processaFoto(arquivo);
-      ed.removeFoto = false;
-      dp.info.textContent = `Foto nova pronta (${Math.max(1, Math.round(ed.foto.tamanho / 1024))} KB). Ela vai para o site quando você publicar.`;
-    } catch {
-      dp.info.textContent = 'Não consegui abrir essa imagem. Use uma foto em JPG, PNG ou WebP.';
+    const arquivos = [...e.target.files];
+    e.target.value = '';
+    if (!arquivos.length) return;
+    const vagas = MAX_FOTOS - ed.fotos.length;
+    if (vagas <= 0) { dp.info.textContent = `Cada produto pode ter até ${MAX_FOTOS} fotos. Remova alguma para colocar outra.`; return; }
+    const usar = arquivos.slice(0, vagas);
+    let falhas = 0;
+    for (let i = 0; i < usar.length; i++) {
+      dp.info.textContent = `Preparando a foto ${i + 1} de ${usar.length}…`;
+      try { ed.fotos.push(await processaFoto(usar[i])); } catch { falhas++; }
+      desenhaFotos();
     }
-    previaFoto();
+    const prontas = usar.length - falhas;
+    dp.info.textContent = [
+      prontas && `${prontas} ${prontas === 1 ? 'foto pronta. Ela vai' : 'fotos prontas. Elas vão'} para o site quando você publicar.`,
+      falhas && `${falhas} não ${falhas === 1 ? 'abriu' : 'abriram'} (use JPG, PNG ou WebP).`,
+      arquivos.length > vagas && `Só cabem ${MAX_FOTOS} fotos por produto.`,
+    ].filter(Boolean).join(' ');
   });
 
-  $('#dp-foto-remover').addEventListener('click', () => {
-    ed.foto = null;
-    ed.removeFoto = true;
-    $('#dp-foto').value = '';
-    dp.info.textContent = 'Foto removida. O site vai mostrar a ilustração da embalagem.';
-    previaFoto();
+  dp.fotos.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-foto-acao]');
+    if (!b) return;
+    const i = Number(b.closest('.foto-item').dataset.i);
+    const l = ed.fotos;
+    if (b.dataset.fotoAcao === 'remover') l.splice(i, 1);
+    if (b.dataset.fotoAcao === 'esq' && i > 0) [l[i - 1], l[i]] = [l[i], l[i - 1]];
+    if (b.dataset.fotoAcao === 'dir' && i < l.length - 1) [l[i + 1], l[i]] = [l[i], l[i + 1]];
+    desenhaFotos();
   });
 
   // mostra o erro dentro da janela e garante que ele fique à vista
@@ -748,15 +772,18 @@
       const base = sl.startsWith(p.marca) ? sl : `${p.marca}-${sl}`;
       p.id = Core.idUnico(base, new Set(S.atual.produtos.map((x) => x.id)));
     }
-    const fotoAntiga = p.imagem;
-    if (ed.foto) {
-      const caminho = `${PASTA_FOTOS}${p.id}${fotoAntiga ? `-${Date.now().toString(36)}` : ''}.${ed.foto.ext}`;
-      S.fotos.set(caminho, { dataUrl: ed.foto.dataUrl, ext: ed.foto.ext });
-      p.imagem = caminho;
-    } else if (ed.removeFoto) {
-      p.imagem = '';
-    }
-    if (fotoAntiga && fotoAntiga !== p.imagem && S.fotos.has(fotoAntiga)) S.fotos.delete(fotoAntiga);
+    const semFotoAntes = !ed.fotosAntes.length;
+    const caminhos = ed.fotos.map((f, i) => {
+      if (f.caminho) return f.caminho;
+      const nome = semFotoAntes && i === 0 ? `${p.id}.${f.ext}` : `${p.id}-${Date.now().toString(36)}${i}.${f.ext}`;
+      const caminho = `${PASTA_FOTOS}${nome}`;
+      S.fotos.set(caminho, { dataUrl: f.dataUrl, ext: f.ext });
+      return caminho;
+    });
+    p.imagem = caminhos[0] || '';
+    if (caminhos.length > 1) p.galeria = caminhos.slice(1); else delete p.galeria;
+    // fotos tiradas que ainda não tinham sido publicadas deixam de esperar o envio
+    for (const antiga of ed.fotosAntes) if (!caminhos.includes(antiga) && S.fotos.has(antiga)) S.fotos.delete(antiga);
 
     const desc = Core.montarDescricao(ed.desc, {
       resumo: dp.resumo.value, serve: dp.serve.value, beneficios: dp.beneficios.value,
@@ -1357,12 +1384,13 @@
   function descreveCambios(c) {
     const itens = [];
     for (const p of c.produtos.adicionados) {
-      itens.push({ titulo: `Produto novo: ${p.nome}`, detalhe: [marcaDe(p.marca) ? marcaDe(p.marca).nome : p.marca, temPreco(p) ? brl(p.preco) : 'sem preço', p.imagem ? 'com foto' : 'sem foto'].join(' · ') });
+      itens.push({ titulo: `Produto novo: ${p.nome}`, detalhe: [marcaDe(p.marca) ? marcaDe(p.marca).nome : p.marca, temPreco(p) ? brl(p.preco) : 'sem preço', todasFotos(p).length > 1 ? `${todasFotos(p).length} fotos` : p.imagem ? 'com foto' : 'sem foto'].join(' · ') });
     }
     for (const [id, campos] of Object.entries(c.produtos.alterados)) {
       const o = S.origPorId.get(id);
       const partes = Object.entries(campos).map(([k, v]) => {
         if (k === 'imagem') return v ? (o.imagem ? 'foto trocada' : 'foto adicionada') : 'foto removida';
+        if (k === 'galeria') return `fotos extras: ${(o.galeria || []).length} → ${(v || []).length}`;
         if (k === 'arte') return 'ilustração';
         return `${ROTULOS[k] || k}: ${fmtValor(k, o[k])} → ${fmtValor(k, v)}`;
       });
@@ -1478,7 +1506,7 @@
       if (textos.produtos !== tp) entradas.push({ path: ARQ_PRODUTOS, mode: '100644', type: 'blob', content: textos.produtos });
       if (textos.descricoes !== td) entradas.push({ path: ARQ_DESCRICOES, mode: '100644', type: 'blob', content: textos.descricoes });
 
-      const emUso = new Set(R1.produtos.map((p) => p.imagem));
+      const emUso = new Set(R1.produtos.flatMap(todasFotos));
       const novas = [...S.fotos].filter(([caminho]) => emUso.has(caminho));
       if (novas.length) etapa(`Enviando ${novas.length} ${novas.length === 1 ? 'foto' : 'fotos'}…`);
       const blobs = await Promise.all(novas.map(async ([caminho, f]) => {
@@ -1488,7 +1516,7 @@
       entradas.push(...blobs);
 
       // fotos de produtos excluídos ou trocados saem do repositório
-      const orfas = [...new Set(R0.produtos.map((p) => p.imagem).filter((i) => i && i.startsWith(PASTA_FOTOS)))].filter((i) => !emUso.has(i));
+      const orfas = [...new Set(R0.produtos.flatMap(todasFotos).filter((i) => i.startsWith(PASTA_FOTOS)))].filter((i) => !emUso.has(i));
       if (orfas.length) {
         const arvore = await api(`/repos/${S.repo}/git/trees/${commitBase.tree.sha}?recursive=1`);
         if (!arvore.truncated) {
@@ -1583,7 +1611,7 @@
       const url = (texto) => URL.createObjectURL(new Blob([texto], { type: 'text/javascript;charset=utf-8' }));
       baixa('produtos.js', url(t.produtos));
       baixa('descricoes.js', url(t.descricoes));
-      const emUso = new Set(R1.produtos.map((p) => p.imagem));
+      const emUso = new Set(R1.produtos.flatMap(todasFotos));
       for (const [caminho, f] of S.fotos) if (emUso.has(caminho)) baixa(caminho.split('/').pop(), f.dataUrl);
       mostraToast('Arquivos baixados. Copie para js/ e images/produtos/ do projeto.');
     } catch (err) {

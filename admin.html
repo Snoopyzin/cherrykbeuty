@@ -220,16 +220,13 @@
         <button class="fechar" type="button" data-fecha aria-label="Fechar">×</button>
       </header>
       <div class="dlg__corpo">
-        <div class="grade-foto">
-          <div class="foto-prev" id="dp-foto-prev" aria-hidden="true"></div>
-          <div class="foto-acoes">
-            <p class="rotulo">Foto do produto</p>
-            <div class="botoes">
-              <label class="btn btn--sec btn--peq btn-arquivo">Escolher foto<input id="dp-foto" type="file" accept="image/*"></label>
-              <button class="btn btn--sec btn--peq" id="dp-foto-remover" type="button">Remover foto</button>
-            </div>
-            <p class="campo__ajuda" id="dp-foto-info">A foto é ajustada sozinha (quadrada e leve). Sem foto, o site mostra uma ilustração da embalagem.</p>
+        <div class="fotos-bloco">
+          <p class="rotulo">Fotos do produto <small>(a primeira é a principal)</small></p>
+          <ul class="fotos-lista" id="dp-fotos"></ul>
+          <div class="botoes">
+            <label class="btn btn--sec btn--peq btn-arquivo">+ Adicionar fotos<input id="dp-foto" type="file" accept="image/*" multiple></label>
           </div>
+          <p class="campo__ajuda" id="dp-foto-info">Dá para escolher várias fotos de uma vez. Elas são ajustadas sozinhas (quadradas, fundo branco e leves). A primeira aparece no catálogo; as outras aparecem quando o cliente abre os detalhes do produto. Sem foto, o site mostra uma ilustração da embalagem.</p>
         </div>
 
         <div class="campo">

@@ -189,9 +189,10 @@
     const l1 = ['id', 'marca', 'categoria'].filter(tem).map(par);
     const l2 = ['nome', 'tipo', 'selo', 'destaque'].filter(tem).map(par);
     const l3 = ['preco', 'preco30', 'precoAntigo', 'imagem'].filter(tem).map(par);
+    const lg = ['galeria'].filter(tem).map(par);
     const l4 = ['arte'].filter(tem).map(par);
     const resto = Object.keys(p).filter((k) => !usados.has(k) && tem(k)).map(par);
-    const linhas = [l1, l2, [...l3, ...resto], l4].filter((l) => l.length).map((l) => l.join(', '));
+    const linhas = [l1, l2, [...l3, ...resto], lg, l4].filter((l) => l.length).map((l) => l.join(', '));
     return `  { ${linhas.join(',\n    ')} },`.split('\n');
   }
 
@@ -433,6 +434,7 @@
       vistos.add(p.id);
       if (!String(p.nome || '').trim()) erros.push({ id: p.id, texto: `Há um produto sem nome (${p.id})` });
       if (!marcas.has(p.marca)) erros.push({ id: p.id, texto: `“${nome}” está sem uma marca válida` });
+      if (p.galeria !== undefined && !(Array.isArray(p.galeria) && p.galeria.every((f) => typeof f === 'string' && f))) erros.push({ id: p.id, texto: `“${nome}” tem a lista de fotos num formato inválido` });
       if (!['skincare', 'haircare'].includes(p.categoria)) erros.push({ id: p.id, texto: `“${nome}” está sem categoria` });
       for (const k of ['preco', 'preco30', 'precoAntigo']) {
         const v = p[k];

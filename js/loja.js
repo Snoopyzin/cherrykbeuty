@@ -406,12 +406,23 @@
     ].filter(Boolean).join('');
   }
 
+  // detalhes: foto principal grande + miniaturas quando o produto tem mais de uma foto
+  function midiaDetalhe(p) {
+    const fotos = [p.imagem, ...(p.galeria || [])].filter(Boolean);
+    if (fotos.length < 2) return `<div class="detalhe__midia">${midia(p)}${selo(p)}</div>`;
+    const alt = esc(`${marcaPorId[p.marca].nome} ${p.nome}`);
+    return `<div class="detalhe__galeria">
+      <div class="detalhe__midia"><img src="${esc(fotos[0])}" alt="${alt}" decoding="async" data-principal>${selo(p)}</div>
+      <ul class="detalhe__miniaturas">${fotos.map((f, i) => `<li><button type="button" data-foto="${esc(f)}" aria-label="Ver a foto ${i + 1} de ${fotos.length}"${i === 0 ? ' aria-current="true"' : ''}><img src="${esc(f)}" alt="" loading="lazy" decoding="async"></button></li>`).join('')}</ul>
+    </div>`;
+  }
+
   function abreDetalhe(id, gatilho) {
     const p = produtoPorId[id];
     if (!p) return;
     const m = marcaPorId[p.marca];
     conteudoDetalhe.innerHTML = `
-      <div class="detalhe__midia">${midia(p)}${selo(p)}</div>
+      ${midiaDetalhe(p)}
       <div class="detalhe__info">
         <p class="detalhe__marca">${esc(m.nome)}</p>
         <h2 class="detalhe__nome" id="detalhe-nome">${esc(p.nome)}</h2>
@@ -426,6 +437,14 @@
     window.CherryPaineis.abrir('detalhe', gatilho);
     history.replaceState(null, '', `#produto=${id}`);
   }
+
+  // trocar a foto grande ao tocar numa miniatura
+  conteudoDetalhe.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-foto]');
+    if (!b) return;
+    $('[data-principal]', conteudoDetalhe).src = b.dataset.foto;
+    $$('[data-foto]', conteudoDetalhe).forEach((x) => { if (x === b) x.setAttribute('aria-current', 'true'); else x.removeAttribute('aria-current'); });
+  });
 
   detalhe.addEventListener('painelfechado', () => {
     if (location.hash.startsWith('#produto=')) history.replaceState(null, '', location.pathname + location.search);
