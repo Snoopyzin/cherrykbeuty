@@ -500,4 +500,9 @@ window.CHERRY_PRODUTOS = [
     nome: 'Victoria\'s Secret Rich Caramel Vanilla', tipo: 'Body Splash', selo: 'Lançamento',
     preco: 179, imagem: 'images/produtos/celimax-victorias-secret-rich-caramel-vanilla.jpg',
     arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'victorias-secret-conjunto-de-presente-victorias-secret-pure-sedu', marca: 'victorias-secret', categoria: 'skincare',
+    nome: 'Conjunto De Presente Victoria\'s Secret - Pure Seduction Mini', tipo: 'kit Body Splash e creme hidratante, mini.', selo: 'Lançamento',
+    preco: 170, precoAntigo: 220, imagem: 'images/produtos/victorias-secret-conjunto-de-presente-victorias-secret-pure-sedu.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
 ];
