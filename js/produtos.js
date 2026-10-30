@@ -126,12 +126,12 @@ window.CHERRY_PRODUTOS = [
   // ---------- Celimax ----------
   { id: 'celimax-retinal-shot', marca: 'celimax', categoria: 'skincare',
     nome: 'Retinal Shot Tightening Booster – 15ml', tipo: 'Booster antissinais',
-    preco: 130, preco30: 130, precoAntigo: 159, imagem: FOTO('celimax-retinal-shot'),
+    preco: 130, preco30: 130, precoAntigo: 180, imagem: FOTO('celimax-retinal-shot'),
     arte: { forma: 'bisnaga', corpo: '#f5d36b', tampa: '#e0a826', texto: '#7a4a00' } },
 
   { id: 'celimax-pore-dark-spot-cream', marca: 'celimax', categoria: 'skincare',
     nome: 'Pore + Dark Spot Cream – 35ml', tipo: 'Creme clareador',
-    preco: 149, preco30: 139, imagem: FOTO('celimax-pore-dark-spot-cream'),
+    preco: 149, preco30: 139, precoAntigo: 160, imagem: FOTO('celimax-pore-dark-spot-cream'),
     arte: { forma: 'bisnaga', corpo: '#fbfbf8', tampa: '#f6a623', texto: '#b36b00' } },
 
   { id: 'celimax-pore-dark-spot-pads', marca: 'celimax', categoria: 'skincare',
@@ -217,7 +217,7 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'skin1004-light-cleansing-oil', marca: 'skin1004', categoria: 'skincare',
     nome: 'Madagascar Centella Light Cleansing Oil – 200ml', tipo: 'Óleo de limpeza',
-    preco: 137, preco30: 137, precoAntigo: 149, imagem: FOTO('skin1004-light-cleansing-oil'),
+    preco: 137, preco30: 137, precoAntigo: 155, imagem: FOTO('skin1004-light-cleansing-oil'),
     arte: { forma: 'pump', corpo: '#ecd08f', tampa: '#efeae0', texto: '#6b5a3a' } },
 
   { id: 'skin1004-tone-brightening-gel-foam', marca: 'skin1004', categoria: 'skincare',
@@ -332,11 +332,6 @@ window.CHERRY_PRODUTOS = [
     preco: 189, preco30: 169, imagem: FOTO('fino-shampoo-condicionador'),
     arte: { forma: 'pump', corpo: '#f4f4f4', tampa: '#ffffff', texto: '#b3121f' } },
 
-  { id: 'boj-green-plum-cleanser', marca: 'beauty-of-joseon', categoria: 'skincare',
-    nome: 'Green Plum Refreshing Cleanser', tipo: 'Limpador facial',
-    preco: null, imagem: FOTO('boj-green-plum-cleanser'),
-    arte: { forma: 'pump', corpo: '#bfe3d4', tampa: '#f4f4f2', texto: '#2f5d4a' } },
-
   { id: 'cosrx-oil-free-lotion', marca: 'cosrx', categoria: 'skincare',
     nome: 'Oil-Free Ultra-Moisturizing Lotion – 100ml', tipo: 'Loção hidratante',
     preco: 219.24, imagem: FOTO('cosrx-oil-free-lotion'),
@@ -344,7 +339,7 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'etude-soon-jung-whip-cleanser', marca: 'etude', categoria: 'skincare',
     nome: 'Soon Jung pH 6.5 Whip Cleanser – 150ml', tipo: 'Espuma de limpeza',
-    preco: null, imagem: FOTO('etude-soon-jung-whip-cleanser'),
+    preco: 82.01, precoAntigo: 95, imagem: FOTO('etude-soon-jung-whip-cleanser'),
     arte: { forma: 'pump', corpo: '#ffffff', tampa: '#f2f2f2', texto: '#2f6fe0' } },
 
   { id: 'eucerin-dermopure-triple-serum', marca: 'eucerin', categoria: 'skincare',
@@ -354,7 +349,7 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'cosrx-snail-92-cream', marca: 'cosrx', categoria: 'skincare',
     nome: 'Advanced Snail 92 All in One Cream – 100g', tipo: 'Creme hidratante',
-    preco: null, imagem: FOTO('cosrx-snail-92-cream'),
+    preco: 79.99, precoAntigo: 89.99, imagem: FOTO('cosrx-snail-92-cream'),
     arte: { forma: 'pote', corpo: '#f1ede0', tampa: '#1f1f1f', texto: '#6b5a2a' } },
 
   { id: 'eucerin-aquaphor-pomada-kit', marca: 'eucerin', categoria: 'skincare',
@@ -364,11 +359,11 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'boj-relief-sun-aqua-fresh', marca: 'beauty-of-joseon', categoria: 'skincare',
     nome: 'Relief Sun Aqua-Fresh: Rice + B5 SPF50+ PA++++', tipo: 'Protetor solar',
-    preco: null, imagem: FOTO('boj-relief-sun-aqua-fresh'),
+    preco: 78.17, imagem: FOTO('boj-relief-sun-aqua-fresh'),
     arte: { forma: 'bisnaga', corpo: '#f6f1e7', tampa: '#9db7e0', texto: '#5a4a32' } },
 
   { id: 'axis-y-dark-spot-serum', marca: 'axis-y', categoria: 'skincare',
     nome: 'Dark Spot Correcting Glow Serum – 50ml', tipo: 'Sérum para manchas',
-    preco: null, imagem: FOTO('axis-y-dark-spot-serum'),
+    preco: 148, imagem: FOTO('axis-y-dark-spot-serum'),
     arte: { forma: 'bisnaga', corpo: '#f4f7f2', tampa: '#1f7a3c', texto: '#1f7a3c' } },
 ];

@@ -638,10 +638,6 @@ window.CHERRY_DESCRICOES = {
     ],
   },
 
-  'boj-green-plum-cleanser': {
-    resumo: 'Limpador facial refrescante com ameixa verde (Green Plum), da Beauty of Joseon.',
-  },
-
   'cosrx-oil-free-lotion': {
     resumo: 'Hidratação leve para ajudar a manter o conforto da pele sem uma sensação muito pesada. Com 70,8% de seiva de bétula.',
   },
