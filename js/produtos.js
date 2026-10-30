@@ -54,8 +54,9 @@ window.CHERRY_MARCAS = [
   { id: 'kerasys', nome: 'Kerasys', logo: 'Kerasys', estilo: 'sans', cor: '#111111' },
   { id: 'revlon-professional', nome: 'Revlon Professional', logo: 'Revlon Professional', estilo: 'sans', cor: '#111111', fundo: '#b51a00' },
   { id: 'elizavecca', nome: 'ELIZAVECCA', logo: 'ELIZAVECCA', estilo: 'sans', cor: '#111111' },
-  { id: 'victorias-secret', nome: 'Victoria’s Secret', logo: 'Victoria’s Secret', estilo: 'sans', cor: '#111111' },
-  { id: 'v-s', nome: 'V.S', logo: 'V.S', estilo: 'sans', cor: '#111111', sub: 'Victoria\'s Secret' },
+  { id: 'victorias-secret', nome: 'Victoria’s Secret', logo: 'Victoria’s Secret', estilo: 'script', cor: '#111111' },
+  { id: 'v-s', nome: 'V.S', logo: 'V.S', estilo: 'script', cor: '#111111', sub: 'Victoria\'s Secret' },
+  { id: 'tsubaki', nome: 'Tsubaki', logo: 'Tsubaki', estilo: 'sans-leve', cor: '#f5ec00' },
 ];
 
 const FOTO = (id) => `images/produtos/${id}.webp`;
@@ -504,5 +505,11 @@ window.CHERRY_PRODUTOS = [
   { id: 'victorias-secret-conjunto-de-presente-victorias-secret-pure-sedu', marca: 'victorias-secret', categoria: 'skincare',
     nome: 'Conjunto De Presente Victoria\'s Secret - Pure Seduction Mini', tipo: 'kit Body Splash e creme hidratante, mini.', selo: 'Lançamento',
     preco: 170, precoAntigo: 220, imagem: 'images/produtos/victorias-secret-conjunto-de-presente-victorias-secret-pure-sedu.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'tsubaki-premium-ex-repair', marca: 'tsubaki', categoria: 'haircare',
+    nome: 'Tsubaki premium EX Repair', tipo: 'É um tratamento capilar japonês de ação imediata para cabelos danificados, ressecados ou quimicamente tratados.',
+    preco: 90, precoAntigo: 120, imagem: 'images/produtos/tsubaki-premium-ex-repair.jpg',
+    galeria: ['images/produtos/tsubaki-premium-ex-repair-mvvft42w1.jpg'],
     arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
 ];
