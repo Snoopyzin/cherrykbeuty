@@ -495,7 +495,7 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'victorias-secret-radiant-wings-shimmer', marca: 'victorias-secret', categoria: 'skincare',
     nome: 'Victoria’s Secret 🌟 Radiant Wings Shimmer', tipo: 'Body Splash', selo: 'Lançamento',
-    preco: 170, precoAntigo: 180, imagem: 'images/produtos/victorias-secret-radiant-wings-shimmer.jpg',
+    preco: 90, precoAntigo: 180, imagem: 'images/produtos/victorias-secret-radiant-wings-shimmer.jpg',
     arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
 
   { id: 'celimax-victorias-secret-rich-caramel-vanilla', marca: 'victorias-secret', categoria: 'skincare',
