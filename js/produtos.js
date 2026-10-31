@@ -518,4 +518,14 @@ window.CHERRY_PRODUTOS = [
     preco: 119.9, precoAntigo: 139.9, imagem: 'images/produtos/biore-moisture-cleansing-serum-230ml.jpg',
     galeria: ['images/produtos/biore-moisture-cleansing-serum-230ml-mvvoivk81.jpg'],
     arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'karseell-oleo-karseell-cabelo', marca: 'karseell', categoria: 'haircare',
+    nome: 'Óleo Karseell Cabelo', tipo: '',
+    preco: 80, precoAntigo: 110, imagem: 'images/produtos/karseell-oleo-karseell-cabelo.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'karseell-kit-karseell-mascara-oleo', marca: 'karseell', categoria: 'haircare',
+    nome: 'Kit Karseell Máscara + Óleo', tipo: '',
+    preco: 119.9, precoAntigo: 149.9, imagem: 'images/produtos/karseell-kit-karseell-mascara-oleo.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
 ];
