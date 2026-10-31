@@ -57,6 +57,7 @@ window.CHERRY_MARCAS = [
   { id: 'victorias-secret', nome: 'Victoria’s Secret', logo: 'Victoria’s Secret', estilo: 'script', cor: '#111111' },
   { id: 'v-s', nome: 'V.S', logo: 'V.S', estilo: 'script', cor: '#111111', sub: 'Victoria\'s Secret' },
   { id: 'tsubaki', nome: 'Tsubaki', logo: 'Tsubaki', estilo: 'sans-leve', cor: '#f5ec00' },
+  { id: 'hada-labo', nome: 'Hada Labo', logo: 'Hada Labo', estilo: 'script', cor: '#a67b01' },
 ];
 
 const FOTO = (id) => `images/produtos/${id}.webp`;
@@ -527,5 +528,17 @@ window.CHERRY_PRODUTOS = [
   { id: 'karseell-kit-karseell-mascara-oleo', marca: 'karseell', categoria: 'haircare',
     nome: 'Kit Karseell Máscara + Óleo', tipo: '',
     preco: 119.9, precoAntigo: 149.9, imagem: 'images/produtos/karseell-kit-karseell-mascara-oleo.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'hada-labo-gokujyun-oil-cleansing-oleo-de-limpeza-facial-200ml', marca: 'hada-labo', categoria: 'skincare',
+    nome: 'Hada Labo Gokujyun Oil Cleansing- Óleo de Limpeza Facial 200ml', tipo: 'É um óleo de limpeza facial japonês com ação demaquilante.',
+    preco: 89.9, precoAntigo: 94.9, imagem: 'images/produtos/hada-labo-gokujyun-oil-cleansing-oleo-de-limpeza-facial-200ml.jpg',
+    galeria: ['images/produtos/hada-labo-gokujyun-oil-cleansing-oleo-de-limpeza-facial-200ml-mvvta9m01.jpg'],
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'hada-labo-gokujyun-face-wash-sabonete-hidratante-facial-com-acid', marca: 'hada-labo', categoria: 'skincare',
+    nome: 'Hada Labo® Gokujyun Face Wash - Sabonete Hidratante Facial Com Ácido Hialurônico 100g', tipo: 'Gel de limpeza',
+    preco: 89, precoAntigo: 120, imagem: 'images/produtos/hada-labo-gokujyun-face-wash-sabonete-hidratante-facial-com-acid.jpg',
+    galeria: ['images/produtos/hada-labo-gokujyun-face-wash-sabonete-hidratante-facial-com-acid-mvvtejdv1.jpg', 'images/produtos/hada-labo-gokujyun-face-wash-sabonete-hidratante-facial-com-acid-mvvtejdv2.jpg'],
     arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
 ];
