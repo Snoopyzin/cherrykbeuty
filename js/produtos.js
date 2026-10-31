@@ -327,13 +327,13 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'biore-uv-aqua-rich', marca: 'biore', categoria: 'skincare',
     nome: 'UV Aqua Rich Watery Essence SPF50+ PA++++', tipo: 'Protetor solar',
-    preco: 79, preco30: 69, imagem: 'images/produtos/biore-uv-aqua-rich-mvvf9y2z0.jpg',
+    preco: 79, preco30: 69, precoAntigo: 85, imagem: 'images/produtos/biore-uv-aqua-rich-mvvf9y2z0.jpg',
     galeria: ['images/produtos/biore-uv-aqua-rich.webp', 'images/produtos/biore-uv-aqua-rich-mvvcir771.jpg', 'images/produtos/biore-uv-aqua-rich-mvvcir772.jpg', 'images/produtos/biore-uv-aqua-rich-mvvcir773.jpg'],
     arte: { forma: 'bisnaga', corpo: '#3fc6d8', tampa: '#f4f4f4', texto: '#ffffff' } },
 
   { id: 'biore-facial-wash-moisture', marca: 'biore', categoria: 'skincare',
     nome: 'Skin Care Facial Wash Moisture', tipo: 'Espuma de limpeza',
-    preco: 55, preco30: 45, precoAntigo: 69.8, imagem: FOTO('biore-facial-wash-moisture'),
+    preco: 55, preco30: 50, precoAntigo: 69.8, imagem: FOTO('biore-facial-wash-moisture'),
     galeria: ['images/produtos/biore-facial-wash-moisture-mvvcj6bx1.jpg'],
     arte: { forma: 'bisnaga', corpo: '#ffffff', tampa: '#f4f4f4', texto: '#1f3f9a' } },
 
@@ -391,7 +391,7 @@ window.CHERRY_PRODUTOS = [
 
   { id: 'biore-skincare-facial-wash-acne-care-130g', marca: 'biore', categoria: 'skincare',
     nome: 'Bioré Skincare Facial Wash Acne Care 130g', tipo: 'Desenvolvido especialmente para peles oleosas, mistas e com tendência à acne.',
-    preco: 55, preco30: 45, precoAntigo: 69.8, imagem: 'images/produtos/biore-skincare-facial-wash-acne-care-130g.jpg',
+    preco: 55, preco30: 50, precoAntigo: 69.8, imagem: 'images/produtos/biore-skincare-facial-wash-acne-care-130g.jpg',
     galeria: ['images/produtos/biore-skincare-facial-wash-acne-care-130g-mvvcyrtx1.jpg'],
     arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
 
