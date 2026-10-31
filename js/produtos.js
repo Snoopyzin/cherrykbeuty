@@ -402,8 +402,8 @@ window.CHERRY_PRODUTOS = [
     arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
 
   { id: 'biore-oleo-demaquilante-facial-cleansing-oil-original-150ml', marca: 'biore', categoria: 'skincare',
-    nome: 'Bioré Oleo Demaquilante Facial Cleansing Oil Original 150ml', tipo: 'Make up Remover',
-    preco: 69.9, preco30: 59.9, imagem: 'images/produtos/biore-oleo-demaquilante-facial-cleansing-oil-original-150ml.jpg',
+    nome: 'Bioré Perfect Oil 230ml', tipo: 'Óleo de limpeza facial. Melhor para maquiagem pesada e à prova d\'água. Dissolve bem protetor solar resistente e maquiagem de longa duração.',
+    preco: 79.9, preco30: 89.9, precoAntigo: 99.9, imagem: 'images/produtos/biore-oleo-demaquilante-facial-cleansing-oil-original-150ml.jpg',
     arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
 
   { id: 'karseell-mascara-capilar-karseell', marca: 'karseell', categoria: 'haircare',
@@ -511,5 +511,11 @@ window.CHERRY_PRODUTOS = [
     nome: 'Tsubaki premium EX Repair', tipo: 'É um tratamento capilar japonês de ação imediata para cabelos danificados, ressecados ou quimicamente tratados.',
     preco: 90, precoAntigo: 120, imagem: 'images/produtos/tsubaki-premium-ex-repair.jpg',
     galeria: ['images/produtos/tsubaki-premium-ex-repair-mvvft42w1.jpg'],
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'biore-moisture-cleansing-serum-230ml', marca: 'biore', categoria: 'skincare',
+    nome: 'Bioré Moisture Cleansing Serum 230ml', tipo: 'Limpeza em textura de sérum. Proposta mais leve e hidratante. Boa opção para maquiagem cotidiana e limpeza suave.',
+    preco: 119.9, precoAntigo: 139.9, imagem: 'images/produtos/biore-moisture-cleansing-serum-230ml.jpg',
+    galeria: ['images/produtos/biore-moisture-cleansing-serum-230ml-mvvoivk81.jpg'],
     arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
 ];
