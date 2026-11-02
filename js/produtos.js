@@ -160,11 +160,6 @@ window.CHERRY_PRODUTOS = [
     preco: 199, preco30: 179, imagem: FOTO('skin1004-probio-cica-glow-sun'),
     arte: { forma: 'bisnaga', corpo: '#3a2a22', tampa: '#d8c8b0', texto: '#f3e6d0' } },
 
-  { id: 'skin1004-probio-cica-intensive', marca: 'skin1004', categoria: 'skincare',
-    nome: 'Probio-Cica Intensive Ampoule – 50ml', tipo: 'Ampola calmante',
-    preco: 189, preco30: 179, imagem: FOTO('skin1004-probio-cica-intensive'),
-    arte: { forma: 'conta-gotas', corpo: '#8a4b1c', tampa: '#1f1f1f', texto: '#f3e6d0' } },
-
   // ---------- K-Secret ----------
   { id: 'k-secret-seoul-1988-sun', marca: 'k-secret', categoria: 'skincare',
     nome: 'Seoul 1988 Sun Pine Tree + Ceramide SPF50+ PA++++ – 50ml', tipo: 'Protetor solar',
@@ -310,11 +305,6 @@ window.CHERRY_PRODUTOS = [
     preco: 169, preco30: 149, imagem: FOTO('celimax-retinol-shot-serum'),
     galeria: ['images/produtos/celimax-retinol-shot-serum-mvvch4091.jpg', 'images/produtos/celimax-retinol-shot-serum-mvvch4092.jpg', 'images/produtos/celimax-retinol-shot-serum-mvvch4093.jpg', 'images/produtos/celimax-retinol-shot-serum-mvvch4094.jpg'],
     arte: { forma: 'pump', corpo: '#d9dbde', tampa: '#c6dc3c', texto: '#4a4a4a' } },
-
-  { id: 'skin1004-centella-ampoule', marca: 'skin1004', categoria: 'skincare',
-    nome: 'Madagascar Centella Ampoule – 55ml', tipo: 'Ampola calmante',
-    preco: 179, preco30: 159, imagem: FOTO('skin1004-centella-ampoule'),
-    arte: { forma: 'conta-gotas', corpo: '#e8c77a', tampa: '#fbfbf7', texto: '#6b5a3a' } },
 
   { id: 'skin1004-centella-ampoule-kit', marca: 'skin1004', categoria: 'skincare',
     nome: 'Madagascar Centella Ampoule Kit – 4 ampolas', tipo: 'Kit de ampolas',

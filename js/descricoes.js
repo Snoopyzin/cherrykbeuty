@@ -609,10 +609,6 @@ window.CHERRY_DESCRICOES = {
     resumo: 'Protetor solar em ampola com centella e probióticos, FPS50+ PA++++. Acabamento glow.',
   },
 
-  'skin1004-probio-cica-intensive': {
-    resumo: 'Ampola concentrada de centella com probióticos. Acalma e repara a pele.',
-  },
-
   /* ---------------- K-SECRET ---------------- */
 
   'k-secret-seoul-1988-sun': {
