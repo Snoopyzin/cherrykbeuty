@@ -531,4 +531,15 @@ window.CHERRY_PRODUTOS = [
     preco: 89, precoAntigo: 120, imagem: 'images/produtos/hada-labo-gokujyun-face-wash-sabonete-hidratante-facial-com-acid.jpg',
     galeria: ['images/produtos/hada-labo-gokujyun-face-wash-sabonete-hidratante-facial-com-acid-mvvtejdv1.jpg', 'images/produtos/hada-labo-gokujyun-face-wash-sabonete-hidratante-facial-com-acid-mvvtejdv2.jpg'],
     arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'celimax-skin1004-madagascar-centella-probio-cica-intensive-ampou', marca: 'skin1004', categoria: 'skincare',
+    nome: 'SKIN1004 Madagascar Centella Probio-Cica Intensive Ampoule 95ml', tipo: 'Sua aliada para uma pele hidratada, nutrida e com a barreira cutânea fortalecida! 🤎 A Probio-Cica Intensive Ampoule da SKIN1004 é uma ampola facial de tratamento intensivo que combina Centella Asiática fermentada, ceramidas e ativos hidratantes para cuidar da barreira natural da pele.  Sua fórmula foi desenvolvida para proporcionar hidratação profunda, acalmar a pele sensibilizada e ajudar a recuperar o conforto e a resistência cutânea. Indicação: Ideal para peles secas, desidratadas, sensíveis ou com a barreira cutânea fragilizada.',
+    preco: 149.9, imagem: 'images/produtos/celimax-skin1004-madagascar-centella-probio-cica-intensive-ampou.jpg',
+    galeria: ['images/produtos/celimax-skin1004-madagascar-centella-probio-cica-intensive-ampou-mvzdmzt61.jpg'],
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
+
+  { id: 'skin1004-madagascar-centella-ampoule-55ml', marca: 'skin1004', categoria: 'skincare',
+    nome: 'SKIN1004 Madagascar Centella Ampoule 55ml', tipo: 'Um cuidado essencial para acalmar, hidratar e proporcionar conforto à pele! 💚  A Madagascar Centella Ampoule da SKIN1004 é uma ampola facial formulada à base de Centella Asiática de Madagascar, conhecida por suas propriedades calmantes e suavizantes.  Sua textura aquosa, leve e de rápida absorção proporciona hidratação sem deixar a pele pesada ou pegajosa.',
+    preco: 119.9, imagem: 'images/produtos/skin1004-madagascar-centella-ampoule-55ml.jpg',
+    arte: { forma: 'frasco', corpo: '#f4d4da', tampa: '#fbfbfb', texto: '#8a5a64' } },
 ];
